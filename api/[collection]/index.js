@@ -1,4 +1,5 @@
 const { createClient } = require('@supabase/supabase-js');
+const crypto = require('crypto');
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
@@ -16,8 +17,18 @@ const VALID_COLLECTIONS = [
 // password, unlike public content like listings or forum threads.
 const ADMIN_ONLY_READ_COLLECTIONS = ['applications', 'bookings', 'messages'];
 
+function hashPassword(plain) {
+  const salt = crypto.randomBytes(16).toString('hex');
+  const hash = crypto.scryptSync(plain, salt, 64).toString('hex');
+  return `${salt}:${hash}`;
+}
+
 function rowToRecord(row) {
-  return { id: row.id, ...row.data, status: row.status };
+  const record = { id: row.id, ...row.data, status: row.status };
+  // A password hash should never leave the server, under any circumstance —
+  // not even to the admin dashboard.
+  delete record.passwordHash;
+  return record;
 }
 
 function isAdminAuthorized(req) {
@@ -71,6 +82,14 @@ module.exports = async (req, res) => {
     const status = body.status ?? null;
     delete body.id;
     delete body.status;
+
+    // Passwords are hashed here, server-side, and the plaintext is never
+    // written to the database or sent back in any response.
+    if (collection === 'applications' && typeof body.password === 'string') {
+      body.passwordHash = hashPassword(body.password);
+    }
+    delete body.password;
+    delete body.confirmPassword;
 
     const { data, error } = await supabase
       .from('records')

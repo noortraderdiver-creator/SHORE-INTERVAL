@@ -16,7 +16,9 @@ const VALID_COLLECTIONS = [
 const OPEN_PATCH_COLLECTIONS = ['threads'];
 
 function rowToRecord(row) {
-  return { id: row.id, ...row.data, status: row.status };
+  const record = { id: row.id, ...row.data, status: row.status };
+  delete record.passwordHash;
+  return record;
 }
 
 function isAdminAuthorized(req) {

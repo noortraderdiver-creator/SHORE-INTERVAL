@@ -407,6 +407,8 @@
     <button class="tab-btn" data-tab="forums">Community forum</button>
     <button class="tab-btn" data-tab="sites">Dive sites</button>
     <button class="tab-btn" data-tab="shops">Dive shops</button>
+    <button class="tab-btn" data-tab="member-signup">Become a member</button>
+    <button class="tab-btn" data-tab="host-signup">Become a host</button>
   </div>
 </div>
 
@@ -515,6 +517,160 @@
   </section>
 </div>
 
+<!-- ============ MEMBER SIGN-UP TAB ============ -->
+<div class="tab-panel" id="tab-member-signup">
+  <section style="max-width:640px;">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow-dark">Join the community</span>
+        <h2>Sign up as a member</h2>
+        <p>Create your account and verify your certification. A real person reviews every application before you can book or take part.</p>
+      </div>
+    </div>
+    <form id="memberSignupForm">
+      <div class="form-grid-2">
+        <div class="form-row">
+          <label for="msName">Full name</label>
+          <input type="text" id="msName" required placeholder="e.g. Priya Nair">
+        </div>
+        <div class="form-row">
+          <label for="msEmail">Email</label>
+          <input type="email" id="msEmail" required placeholder="you@example.com">
+        </div>
+      </div>
+      <div class="form-grid-2">
+        <div class="form-row">
+          <label for="msPassword">Password</label>
+          <input type="password" id="msPassword" required minlength="8" autocomplete="new-password">
+        </div>
+        <div class="form-row">
+          <label for="msPasswordConfirm">Confirm password</label>
+          <input type="password" id="msPasswordConfirm" required minlength="8" autocomplete="new-password">
+        </div>
+      </div>
+      <div class="form-grid-2">
+        <div class="form-row">
+          <label for="msAgency">Certifying agency</label>
+          <select id="msAgency">
+            <option>PADI</option>
+            <option>SSI</option>
+            <option>NAUI</option>
+            <option>BSAC</option>
+            <option>CMAS</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label for="msCert">Certification level</label>
+          <select id="msCert">
+            <option>Open Water</option>
+            <option>Advanced</option>
+            <option>Rescue</option>
+            <option>Divemaster / Pro</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <label for="msCertNumber">Certification number (optional for this preview)</label>
+        <input type="text" id="msCertNumber" placeholder="e.g. AB1234567">
+      </div>
+      <div class="form-row">
+        <label for="msCertPhoto">Photo of your certification card (ID)</label>
+        <input type="file" id="msCertPhoto" accept="image/*" required>
+        <div id="msCertPreviewWrap" style="display:none;margin-top:10px;">
+          <img id="msCertPreview" style="max-width:100%;max-height:160px;border-radius:8px;border:1px solid rgba(11,22,32,0.15);">
+        </div>
+      </div>
+      <div class="form-row">
+        <label for="msBio">Profile — tell other members a bit about you</label>
+        <textarea id="msBio" placeholder="Home dive site, favorite kind of diving, how long you've been certified..."></textarea>
+      </div>
+      <div style="background:var(--foam-2);border-radius:8px;padding:12px 14px;margin-bottom:16px;font-size:12.5px;color:#354340;line-height:1.6;">
+        <strong>No booking fee, ever.</strong> As a member you pay the nightly rate plus any extras the host sets — always shown before you book.
+      </div>
+      <button type="submit" class="btn btn-reef modal-submit">Create account</button>
+      <p style="font-size:12px;color:#5B6B65;margin:10px 0 0;">You'll get "pending" status right away. Booking unlocks once a reviewer approves your cert.</p>
+    </form>
+  </section>
+</div>
+
+<!-- ============ HOST SIGN-UP TAB ============ -->
+<div class="tab-panel" id="tab-host-signup">
+  <section style="max-width:640px;">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow-dark">Got a place near the water?</span>
+        <h2>Sign up as a host</h2>
+        <p>Create your host account and verify your certification. Once approved, you'll be able to list your place with photos, pricing, and availability.</p>
+      </div>
+    </div>
+    <form id="hostSignupForm">
+      <div class="form-grid-2">
+        <div class="form-row">
+          <label for="hsName">Full name</label>
+          <input type="text" id="hsName" required placeholder="e.g. Marco T.">
+        </div>
+        <div class="form-row">
+          <label for="hsEmail">Email</label>
+          <input type="email" id="hsEmail" required placeholder="you@example.com">
+        </div>
+      </div>
+      <div class="form-grid-2">
+        <div class="form-row">
+          <label for="hsPassword">Password</label>
+          <input type="password" id="hsPassword" required minlength="8" autocomplete="new-password">
+        </div>
+        <div class="form-row">
+          <label for="hsPasswordConfirm">Confirm password</label>
+          <input type="password" id="hsPasswordConfirm" required minlength="8" autocomplete="new-password">
+        </div>
+      </div>
+      <div class="form-grid-2">
+        <div class="form-row">
+          <label for="hsAgency">Certifying agency</label>
+          <select id="hsAgency">
+            <option>PADI</option>
+            <option>SSI</option>
+            <option>NAUI</option>
+            <option>BSAC</option>
+            <option>CMAS</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label for="hsCert">Certification level</label>
+          <select id="hsCert">
+            <option>Open Water</option>
+            <option>Advanced</option>
+            <option>Rescue</option>
+            <option>Divemaster / Pro</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <label for="hsCertNumber">Certification number (optional for this preview)</label>
+        <input type="text" id="hsCertNumber" placeholder="e.g. AB1234567">
+      </div>
+      <div class="form-row">
+        <label for="hsCertPhoto">Photo of your certification card (ID)</label>
+        <input type="file" id="hsCertPhoto" accept="image/*" required>
+        <div id="hsCertPreviewWrap" style="display:none;margin-top:10px;">
+          <img id="hsCertPreview" style="max-width:100%;max-height:160px;border-radius:8px;border:1px solid rgba(11,22,32,0.15);">
+        </div>
+      </div>
+      <div class="form-row">
+        <label for="hsBio">Profile — tell members a bit about you and your place</label>
+        <textarea id="hsBio" placeholder="Where you're located, what makes your place worth a stay, how long you've hosted divers..."></textarea>
+      </div>
+      <div style="background:var(--foam-2);border-radius:8px;padding:12px 14px;margin-bottom:16px;font-size:12.5px;color:#354340;line-height:1.6;">
+        <strong>Surface Interval takes 12% of each booking's nightly total.</strong> No listing fee, no monthly charge. Once approved, add your specific place (photos, price, extra fees) from the nav.
+      </div>
+      <button type="submit" class="btn btn-sand modal-submit">Create host account</button>
+      <p style="font-size:12px;color:#5B6B65;margin:10px 0 0;">You'll get "pending" status right away. Listing a place unlocks once a reviewer approves your cert.</p>
+    </form>
+  </section>
+</div>
+
 <footer>
   <div class="footer-inner">
     <div class="footer-top">
@@ -541,6 +697,32 @@
   </div>
   <button class="btn btn-reef" id="installBtn" style="padding:8px 14px;font-size:12.5px;flex:none;">Install</button>
   <button id="installDismiss" style="background:none;border:none;color:rgba(242,246,243,0.5);font-size:18px;padding:0 4px;flex:none;">✕</button>
+</div>
+
+<!-- LOG IN MODAL -->
+<div class="overlay" id="loginOverlay">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('loginOverlay')">✕</button>
+    <h3>Log in</h3>
+    <p class="sub">Welcome back.</p>
+    <form id="loginForm">
+      <div class="form-row">
+        <label for="loginEmail">Email</label>
+        <input type="email" id="loginEmail" required placeholder="you@example.com">
+      </div>
+      <div class="form-row">
+        <label for="loginPassword">Password</label>
+        <input type="password" id="loginPassword" required autocomplete="current-password">
+      </div>
+      <button type="submit" class="btn btn-reef modal-submit">Log in</button>
+    </form>
+    <p style="font-size:13px;color:#5B6B65;margin:16px 0 0;text-align:center;">
+      New here?
+      <a href="#" onclick="closeModal('loginOverlay'); document.querySelector('.tab-btn[data-tab=\'member-signup\']').click(); return false;" style="color:var(--reef);font-weight:600;">Become a member</a>
+      or
+      <a href="#" onclick="closeModal('loginOverlay'); document.querySelector('.tab-btn[data-tab=\'host-signup\']').click(); return false;" style="color:var(--reef);font-weight:600;">become a host</a>.
+    </p>
+  </div>
 </div>
 
 <!-- JOIN MODAL -->
@@ -1739,11 +1921,20 @@ document.querySelectorAll('.overlay').forEach(ov=>{
 
 document.getElementById('joinNavBtn').addEventListener('click', ()=>{
   if(member){ showToast(member.name + ' is already verified'); return; }
-  openModal('joinOverlay');
+  openModal('loginOverlay');
 });
 function tryOpenHostForm(){
-  if(!member){ openModal('joinOverlay'); showToast('Join first, then list your place'); return; }
-  if(member.status !== 'approved'){ showToast('Your membership is still pending review — hosting unlocks once approved'); return; }
+  if(!member){
+    showToast('Create a host account first, then list your place');
+    document.querySelector('.tab-btn[data-tab="host-signup"]').click();
+    return;
+  }
+  if(member.role !== 'host'){
+    showToast('Hosting is for host accounts — sign up as a host to list a place');
+    document.querySelector('.tab-btn[data-tab="host-signup"]').click();
+    return;
+  }
+  if(member.status !== 'approved'){ showToast('Your host account is still pending review — hosting unlocks once approved'); return; }
   editingListingId = null;
   document.getElementById('listForm').reset();
   document.getElementById('lPhotoPreviewWrap').style.display = 'none';
@@ -1794,6 +1985,118 @@ document.getElementById('joinForm').addEventListener('submit', async (e)=>{
   e.target.reset();
   document.getElementById('certPreviewWrap').style.display = 'none';
   showToast('Application submitted — pending review');
+});
+
+/* ---------------- MEMBER / HOST SIGN-UP TABS ----------------
+   Fuller, dedicated versions of the join flow above — same underlying
+   application record, but collected as its own page with a password,
+   ID photo, and profile bio, tagged with a role (member or host). */
+
+function readFileAsDataUrl(file){
+  return new Promise(resolve=>{
+    const reader = new FileReader();
+    reader.onload = ()=> resolve(reader.result);
+    reader.readAsDataURL(file);
+  });
+}
+
+function wirePhotoPreview(inputId, previewId, wrapId){
+  document.getElementById(inputId).addEventListener('change', (e)=>{
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = ()=>{
+      document.getElementById(previewId).src = reader.result;
+      document.getElementById(wrapId).style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  });
+}
+wirePhotoPreview('msCertPhoto', 'msCertPreview', 'msCertPreviewWrap');
+wirePhotoPreview('hsCertPhoto', 'hsCertPreview', 'hsCertPreviewWrap');
+
+async function submitSignup({ prefix, role, formId }){
+  const password = document.getElementById(prefix + 'Password').value;
+  const confirm = document.getElementById(prefix + 'PasswordConfirm').value;
+  if(password.length < 8){ showToast('Password must be at least 8 characters'); return; }
+  if(password !== confirm){ showToast('Passwords do not match'); return; }
+
+  const file = document.getElementById(prefix + 'CertPhoto').files[0];
+  if(!file){ showToast('Please attach a photo of your certification card'); return; }
+  const photoDataUrl = await readFileAsDataUrl(file);
+
+  const application = {
+    id: 'app-' + Date.now(),
+    role,
+    name: document.getElementById(prefix + 'Name').value,
+    email: document.getElementById(prefix + 'Email').value,
+    password,
+    agency: document.getElementById(prefix + 'Agency').value,
+    cert: document.getElementById(prefix + 'Cert').value,
+    certNumber: document.getElementById(prefix + 'CertNumber').value,
+    photo: photoDataUrl,
+    bio: document.getElementById(prefix + 'Bio').value,
+    status: 'pending',
+    appliedAt: new Date().toISOString(),
+  };
+
+  try{
+    await apiCreate('applications', application);
+  }catch(e){
+    showToast('Could not create your account — please try again');
+    return;
+  }
+
+  // Never keep the plaintext password around client-side longer than needed
+  // to send it — the server hashes it and never returns it.
+  const { password: _discard, ...safeApplication } = application;
+  member = safeApplication;
+  sessionStorage.setItem('si_my_email', member.email);
+  applyMemberUI();
+  document.getElementById(formId).reset();
+  document.getElementById(prefix + 'CertPreviewWrap').style.display = 'none';
+  showToast((role === 'host' ? 'Host account' : 'Account') + ' created — pending review');
+  document.querySelector('.tab-btn[data-tab="browse"]').click();
+}
+
+document.getElementById('memberSignupForm').addEventListener('submit', (e)=>{
+  e.preventDefault();
+  submitSignup({ prefix: 'ms', role: 'member', formId: 'memberSignupForm' });
+});
+
+document.getElementById('hostSignupForm').addEventListener('submit', (e)=>{
+  e.preventDefault();
+  submitSignup({ prefix: 'hs', role: 'host', formId: 'hostSignupForm' });
+});
+
+document.getElementById('loginForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const email = document.getElementById('loginEmail').value;
+  const password = document.getElementById('loginPassword').value;
+
+  let res;
+  try{
+    res = await fetch('/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    });
+  }catch(e){
+    showToast('Could not log in right now — please try again');
+    return;
+  }
+
+  if(!res.ok){
+    showToast('Incorrect email or password');
+    return;
+  }
+
+  member = await res.json();
+  sessionStorage.setItem('si_my_email', member.email);
+  applyMemberUI();
+  closeModal('loginOverlay');
+  document.getElementById('loginForm').reset();
+  showToast('Welcome back, ' + member.name);
 });
 
 function applyMemberUI(){
@@ -1939,9 +2242,13 @@ async function renderAdminMembership(){
       <div style="flex:1;min-width:0;">
         <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
           <strong style="font-size:14.5px;">${escapeHtml(a.name)}</strong>
-          <span class="status-badge" style="color:${statusColor[a.status]};border:1px solid ${statusColor[a.status]};">${statusLabel[a.status]}</span>
+          <div style="display:flex;gap:6px;">
+            <span class="status-badge" style="color:#5B6B65;border:1px solid rgba(11,22,32,0.2);">${a.role === 'host' ? 'Host' : 'Member'}</span>
+            <span class="status-badge" style="color:${statusColor[a.status]};border:1px solid ${statusColor[a.status]};">${statusLabel[a.status]}</span>
+          </div>
         </div>
         <p style="font-size:13px;color:#5B6B65;margin:4px 0 8px;">${escapeHtml(a.email)} · ${escapeHtml(a.agency)} ${escapeHtml(a.cert)}${a.certNumber ? ' · #' + escapeHtml(a.certNumber) : ''}</p>
+        ${a.bio ? `<p style="font-size:12.5px;color:#354340;margin:0 0 8px;font-style:italic;">"${escapeHtml(a.bio)}"</p>` : ''}
         <div style="display:flex;gap:8px;">
           <button class="btn btn-reef" style="padding:7px 14px;font-size:12.5px;" onclick="setApplicationStatus('${a.id}','approved')">Approve</button>
           <button class="btn btn-ghost" style="padding:7px 14px;font-size:12.5px;border-color:rgba(11,22,32,0.2);color:var(--ink);" onclick="setApplicationStatus('${a.id}','rejected')">Reject</button>
