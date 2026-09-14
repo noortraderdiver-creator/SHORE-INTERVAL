@@ -308,12 +308,25 @@
   }
   @keyframes shimmer{0%{background-position:100% 0;}100%{background-position:0 0;}}
 
+  .nav-hamburger{display:none;background:none;border:none;color:var(--foam);padding:6px;cursor:pointer;}
+  .nav-hamburger svg{display:block;}
   @media (max-width:860px){
     .hero-inner{grid-template-columns:1fr;padding-top:48px;}
     .hero h1{font-size:38px;}
     .host-cta{grid-template-columns:1fr;padding:36px 24px;}
     .form-grid-2{grid-template-columns:1fr;}
-    .nav-links{display:none;}
+    .nav-hamburger{display:block;}
+    .nav-links{
+      display:none;position:absolute;top:100%;left:0;right:0;
+      flex-direction:column;align-items:stretch;gap:0;
+      background:rgb(0,25,50);border-bottom:1px solid var(--line);
+      padding:8px 24px 16px;
+    }
+    .nav-links.mobile-open{display:flex;}
+    .nav-links a, .nav-links .btn, .nav-links .member-pill{
+      width:100%;box-sizing:border-box;padding:12px 4px;text-align:left;
+      border-radius:0;border-bottom:1px solid var(--line);
+    }
   }
   :focus-visible{outline:2px solid var(--reef-light);outline-offset:2px;}
   @media (prefers-reduced-motion:reduce){
@@ -325,9 +338,12 @@
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-inner">
+  <div class="nav-inner" style="position:relative;">
     <a href="#" class="logo"><img src="/logo.png" alt="Surface Interval logo" width="64" height="64" style="flex:none;object-fit:contain;border-radius:6px;">Surface Interval</a>
-    <div class="nav-links">
+    <button class="nav-hamburger" id="navHamburger" aria-label="Menu" aria-expanded="false">
+      <svg width="26" height="26" viewBox="0 0 26 26" fill="none"><path d="M4 7h18M4 13h18M4 19h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <div class="nav-links" id="navLinks">
       <a href="#browse">Browse stays</a>
       <a href="#host" id="hostLink">List your place</a>
       <span class="member-pill" id="memberPill"><span class="dot" id="memberDot" style="width:6px;height:6px;border-radius:50%;background:#2FAE8F;"></span><span id="memberName"></span></span>
@@ -1391,6 +1407,22 @@ async function init(){
   });
 }
 init();
+
+/* ---------------- MOBILE NAV ---------------- */
+const navHamburger = document.getElementById('navHamburger');
+const navLinks = document.getElementById('navLinks');
+navHamburger.addEventListener('click', ()=>{
+  const isOpen = navLinks.classList.toggle('mobile-open');
+  navHamburger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+});
+// Close the mobile menu after tapping any link/button inside it, so it
+// doesn't stay open covering the page after navigating.
+navLinks.addEventListener('click', (e)=>{
+  if(e.target.closest('a, button')){
+    navLinks.classList.remove('mobile-open');
+    navHamburger.setAttribute('aria-expanded', 'false');
+  }
+});
 
 /* Gate content-creation actions behind an approved membership */
 function requireApproved(actionLabel){
