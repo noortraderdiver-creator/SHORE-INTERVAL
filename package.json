@@ -1,0 +1,9 @@
+{
+  "name": "surface-interval",
+  "version": "1.0.0",
+  "description": "Surface Interval — a members-only home-share site for certified divers. Deploys on Vercel with Supabase as the database.",
+  "private": true,
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.4"
+  }
+}
