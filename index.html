@@ -712,6 +712,22 @@
   <div class="modal wide" id="detailModalBody"></div>
 </div>
 
+<!-- ADMIN SIGN-IN MODAL -->
+<div class="overlay" id="adminAuthOverlay">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('adminAuthOverlay')">✕</button>
+    <h3>Admin sign-in</h3>
+    <p class="sub">Enter the admin password to review applications and manage listings.</p>
+    <form id="adminAuthForm">
+      <div class="form-row">
+        <label for="adminPasswordInput">Password</label>
+        <input type="password" id="adminPasswordInput" required autocomplete="current-password">
+      </div>
+      <button type="submit" class="btn btn-reef modal-submit">Sign in</button>
+    </form>
+  </div>
+</div>
+
 <!-- ADMIN REVIEW MODAL -->
 <div class="overlay" id="adminOverlay">
   <div class="modal wide">
@@ -960,7 +976,10 @@ const KEY_TO_COLLECTION = {
 const _remoteCache = {};
 
 async function apiList(collection){
-  const res = await fetch('/api/' + collection);
+  const res = await fetch('/api/' + collection, {
+    headers: { 'X-Admin-Key': getAdminKey() }
+  });
+  if(res.status === 401){ sessionStorage.removeItem('si_admin_key'); throw new Error('ADMIN_AUTH_REQUIRED'); }
   if(!res.ok) throw new Error('Failed to load ' + collection);
   return await res.json();
 }
@@ -973,17 +992,26 @@ async function apiCreate(collection, item){
   if(!res.ok) throw new Error('Failed to create in ' + collection);
   return await res.json();
 }
+function getAdminKey(){
+  return sessionStorage.getItem('si_admin_key') || '';
+}
+
 async function apiUpdate(collection, id, patch){
   const res = await fetch('/api/' + collection + '/' + encodeURIComponent(id), {
     method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', 'X-Admin-Key': getAdminKey() },
     body: JSON.stringify(patch),
   });
+  if(res.status === 401){ sessionStorage.removeItem('si_admin_key'); throw new Error('ADMIN_AUTH_REQUIRED'); }
   if(!res.ok) throw new Error('Failed to update in ' + collection);
   return await res.json();
 }
 async function apiDelete(collection, id){
-  const res = await fetch('/api/' + collection + '/' + encodeURIComponent(id), { method: 'DELETE' });
+  const res = await fetch('/api/' + collection + '/' + encodeURIComponent(id), {
+    method: 'DELETE',
+    headers: { 'X-Admin-Key': getAdminKey() },
+  });
+  if(res.status === 401){ sessionStorage.removeItem('si_admin_key'); throw new Error('ADMIN_AUTH_REQUIRED'); }
   if(!res.ok) throw new Error('Failed to delete from ' + collection);
   return await res.json();
 }
@@ -996,7 +1024,12 @@ async function safeGet(key, shared){
     _remoteCache[key] = arr;
     return JSON.stringify(arr);
   }catch(e){
-    console.error('API load error', e);
+    if(e.message === 'ADMIN_AUTH_REQUIRED'){
+      showToast('Incorrect admin password — please sign in again');
+      promptAdminPassword();
+    } else {
+      console.error('API load error', e);
+    }
     return null;
   }
 }
@@ -1028,7 +1061,12 @@ async function safeSet(key, value, shared){
     _remoteCache[key] = newArray;
     return true;
   }catch(e){
-    console.error('API save error', e);
+    if(e.message === 'ADMIN_AUTH_REQUIRED'){
+      showToast('Incorrect admin password — please sign in again');
+      promptAdminPassword();
+    } else {
+      console.error('API save error', e);
+    }
     return false;
   }
 }
@@ -1040,6 +1078,20 @@ async function loadApplications(){
 }
 async function saveApplications(apps){
   await safeSet('si_applications_v1', JSON.stringify(apps), true);
+}
+
+// Lets a member check their own application status without needing the
+// admin password — fetches just their one record, not the full list.
+async function fetchMyApplication(email){
+  try{
+    const res = await fetch('/api/applications?email=' + encodeURIComponent(email));
+    if(!res.ok) return null;
+    const arr = await res.json();
+    return arr[0] || null;
+  }catch(e){
+    console.error('Failed to check application status', e);
+    return null;
+  }
 }
 
 /* ---------------- INIT ---------------- */
@@ -1077,15 +1129,31 @@ async function init(){
   // Reconnect this browser to its application, if it applied before
   const myEmail = sessionStorage.getItem('si_my_email');
   if(myEmail){
-    const apps = await loadApplications();
-    const mine = apps.find(a => a.email.toLowerCase() === myEmail.toLowerCase());
+    const mine = await fetchMyApplication(myEmail);
     if(mine){ member = mine; applyMemberUI(); }
   }
 
   document.getElementById('adminLink').addEventListener('click', async (e)=>{
     e.preventDefault();
+    if(sessionStorage.getItem('si_admin_key')){
+      switchAdminTab('membership');
+      openModal('adminOverlay');
+    } else {
+      promptAdminPassword();
+    }
+  });
+
+  document.getElementById('adminAuthForm').addEventListener('submit', (e)=>{
+    e.preventDefault();
+    const pw = document.getElementById('adminPasswordInput').value;
+    sessionStorage.setItem('si_admin_key', pw);
+    document.getElementById('adminAuthForm').reset();
+    closeModal('adminAuthOverlay');
     switchAdminTab('membership');
     openModal('adminOverlay');
+    // We don't know yet if the password is actually correct — that's only
+    // confirmed server-side on the first real admin action. If it's wrong,
+    // that action will fail and prompt again automatically.
   });
 
   document.getElementById('joinCertPhoto').addEventListener('change', (e)=>{
@@ -1551,7 +1619,6 @@ function openDetail(id){
       ${fees.map(f=>`<div style="display:flex;justify-content:space-between;font-size:14px;padding:4px 0;color:#3D4C47;"><span>${escapeHtml(f.label)}</span><span>$${f.amount}</span></div>`).join('')}
       <div style="display:flex;justify-content:space-between;font-size:14px;padding:4px 0;color:#5B6B65;"><span>Surface Interval booking fee</span><span>$0</span></div>
       <div style="display:flex;justify-content:space-between;font-size:15.5px;font-weight:600;padding:10px 0 0;margin-top:6px;border-top:1px solid rgba(11,22,32,0.1);"><span>Total per night</span><span>$${total}</span></div>
-      <p style="font-size:11.5px;color:#5B6B65;margin:10px 0 0;">Members never pay a booking fee — extra fees above are set by the host. Hosts pay a 12% fee on the nightly total, already reflected in their payout. Payment isn't collected yet — this is a request; you'll pay once the host approves.</p>
     </div>
 
     <div class="form-grid-2">
@@ -1607,8 +1674,7 @@ async function requestStay(id){
   if(overlap){ showToast('Those dates overlap with when the host has marked it unavailable'); return; }
 
   const messageNote = document.getElementById('bookMessage').value;
-  const bookings = await loadCollection('si_bookings_v1', []);
-  bookings.unshift({
+  const booking = {
     id: 'bk-' + Date.now(),
     listingId: l.id,
     listingTitle: l.title,
@@ -1619,8 +1685,13 @@ async function requestStay(id){
     message: messageNote,
     status: 'pending',
     createdAt: new Date().toISOString(),
-  });
-  await safeSet('si_bookings_v1', JSON.stringify(bookings), true);
+  };
+  try{
+    await apiCreate('bookings', booking);
+  }catch(e){
+    showToast('Could not send your request — please try again');
+    return;
+  }
 
   closeModal('detailOverlay');
   showToast('Request sent — the host will review your dates before you pay');
@@ -1633,8 +1704,7 @@ async function sendHostMessage(id){
   const body = document.getElementById('msgBody').value.trim();
   if(!body){ showToast('Write a message first'); return; }
 
-  const messages = await loadCollection('si_messages_v1', []);
-  messages.unshift({
+  const message = {
     id: 'msg-' + Date.now(),
     listingId: l.id,
     listingTitle: l.title,
@@ -1643,8 +1713,13 @@ async function sendHostMessage(id){
     fromEmail: member.email,
     body,
     createdAt: new Date().toISOString(),
-  });
-  await safeSet('si_messages_v1', JSON.stringify(messages), true);
+  };
+  try{
+    await apiCreate('messages', message);
+  }catch(e){
+    showToast('Could not send your message — please try again');
+    return;
+  }
 
   document.getElementById('msgBody').value = '';
   showToast('Message sent to the host');
@@ -1653,6 +1728,11 @@ async function sendHostMessage(id){
 /* ---------------- MODALS ---------------- */
 function openModal(id){ document.getElementById(id).classList.add('open'); }
 function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+
+function promptAdminPassword(){
+  closeModal('adminOverlay');
+  openModal('adminAuthOverlay');
+}
 document.querySelectorAll('.overlay').forEach(ov=>{
   ov.addEventListener('click', e=>{ if(e.target === ov) ov.classList.remove('open'); });
 });
@@ -1700,9 +1780,12 @@ document.getElementById('joinForm').addEventListener('submit', async (e)=>{
     appliedAt: new Date().toISOString(),
   };
 
-  const apps = await loadApplications();
-  apps.unshift(application);
-  await saveApplications(apps);
+  try{
+    await apiCreate('applications', application);
+  }catch(e){
+    showToast('Could not submit your application — please try again');
+    return;
+  }
 
   member = application;
   sessionStorage.setItem('si_my_email', member.email);
@@ -1740,8 +1823,7 @@ function applyMemberUI(){
 
 async function refreshMyStatus(){
   if(!member) return;
-  const apps = await loadApplications();
-  const mine = apps.find(a => a.email.toLowerCase() === member.email.toLowerCase());
+  const mine = await fetchMyApplication(member.email);
   if(mine){
     member = mine;
     applyMemberUI();
