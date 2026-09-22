@@ -1,0 +1,2812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Shore Interval — Stays for Certified Divers</title>
+<meta name="description" content="Shore Interval — a diver-to-diver community. Connect. Stay. Dive. Share.">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0A1929">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Shore Interval">
+<link rel="icon" href="/icons/icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --abyss:#0A1929;
+    --depth:#123449;
+    --depth-2:#1B4A63;
+    --reef:#1F8A70;
+    --reef-light:#2FAE8F;
+    --sand:#D9A66C;
+    --foam:#F2F6F3;
+    --foam-2:#E7EEE8;
+    --ink:#0B1620;
+    --coral:#E1633F;
+    --line:rgba(242,246,243,0.14);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--foam);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.display{
+    font-family:'Fraunces',serif;
+    font-optical-sizing:auto;
+    letter-spacing:-0.01em;
+  }
+  .mono{
+    font-family:'IBM Plex Mono',monospace;
+  }
+  a{color:inherit;}
+  button{font-family:inherit;cursor:pointer;}
+
+  /* ---------- NAV ---------- */
+  .nav{
+    position:sticky;top:0;z-index:40;
+    background:rgb(0,25,50);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-inner{
+    max-width:1180px;margin:0 auto;padding:16px 24px;
+    display:flex;align-items:center;justify-content:space-between;color:var(--foam);
+  }
+  .logo{
+    display:flex;align-items:center;gap:10px;font-family:'Fraunces',serif;
+    font-weight:600;font-size:19px;letter-spacing:0.01em;color:var(--foam);text-decoration:none;
+  }
+  .logo .dot{width:8px;height:8px;border-radius:50%;background:var(--reef-light);box-shadow:0 0 8px var(--reef-light);}
+  .nav-links{display:flex;align-items:center;gap:28px;font-size:14px;}
+  .nav-links a{text-decoration:none;color:var(--foam);opacity:0.85;}
+  .nav-links a:hover{opacity:1;}
+  .btn{
+    border:none;border-radius:6px;padding:10px 18px;font-size:14px;font-weight:600;
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .btn:active{transform:translateY(1px);}
+  .btn-reef{background:var(--reef);color:var(--foam);}
+  .btn-reef:hover{background:var(--reef-light);}
+  .btn-sand{background:var(--sand);color:var(--abyss);}
+  .btn-sand:hover{filter:brightness(1.06);}
+  .btn-ghost{background:transparent;border:1px solid var(--line);color:var(--foam);}
+  .btn-ghost:hover{background:rgba(242,246,243,0.08);}
+  .member-pill{
+    display:none;align-items:center;gap:8px;background:rgba(31,138,112,0.18);
+    border:1px solid rgba(47,174,143,0.4);color:var(--foam);padding:6px 12px;border-radius:999px;font-size:13px;
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    background:radial-gradient(ellipse at 20% -10%, #163f57 0%, var(--abyss) 55%);
+    color:var(--foam);position:relative;overflow:hidden;
+  }
+  .hero-inner{
+    max-width:1180px;margin:0 auto;padding:76px 24px 64px;
+    display:grid;grid-template-columns:1.15fr 0.85fr;gap:40px;align-items:center;
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;
+    color:var(--reef-light);display:flex;align-items:center;gap:8px;margin-bottom:18px;
+  }
+  .eyebrow::before{content:'';width:22px;height:1px;background:var(--reef-light);}
+  .hero h1{font-size:52px;line-height:1.05;font-weight:600;margin:0 0 22px;}
+  .hero h1 em{font-style:italic;color:var(--reef-light);}
+  .hero p{font-size:17px;line-height:1.6;color:rgba(242,246,243,0.78);max-width:480px;margin:0 0 30px;}
+  .hero-ctas{display:flex;gap:14px;flex-wrap:wrap;}
+  .hero-note{margin-top:26px;font-size:13px;color:rgba(242,246,243,0.55);}
+
+  /* gauge */
+  .gauge-wrap{display:flex;justify-content:center;align-items:center;}
+  .gauge-caption{
+    text-align:center;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.12em;
+    text-transform:uppercase;color:var(--reef-light);margin-top:-6px;
+  }
+
+  .tier-strip{
+    border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+    background:var(--depth);
+  }
+
+  /* ---- TAB BAR ---- */
+  .tab-bar{
+    position:sticky;top:57px;z-index:30;background:#fff;border-bottom:1px solid rgba(11,22,32,0.1);
+  }
+  .tab-bar-inner{max-width:1180px;margin:0 auto;padding:0 24px;display:flex;gap:6px;overflow-x:auto;}
+  .tab-btn{
+    background:none;border:none;padding:16px 6px;margin-right:24px;font-size:14.5px;font-weight:600;
+    color:#8A9691;border-bottom:2px solid transparent;white-space:nowrap;
+  }
+  .tab-btn.active{color:var(--ink);border-bottom-color:var(--reef);}
+  .admin-tab-btn.active{background:var(--reef);color:#fff !important;border-color:var(--reef) !important;}
+  .admin-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid rgba(11,22,32,0.07);}
+  .admin-row-actions{display:flex;gap:6px;flex:none;}
+  .admin-row-actions button{padding:6px 12px;font-size:12px;border-radius:6px;}
+  .status-badge{font-size:10.5px;font-family:'IBM Plex Mono',monospace;padding:3px 8px;border-radius:999px;text-transform:uppercase;letter-spacing:0.04em;}
+  .tab-panel{display:none;}
+  .tab-panel.active{display:block;}
+
+  /* ---- FORUM ---- */
+  .thread-row{
+    display:flex;justify-content:space-between;align-items:center;gap:16px;
+    padding:18px 20px;background:#fff;border:1px solid rgba(11,22,32,0.08);border-radius:10px;margin-bottom:10px;cursor:pointer;
+  }
+  .thread-row:hover{border-color:rgba(31,138,112,0.4);}
+  .thread-cat{
+    font-family:'IBM Plex Mono',monospace;font-size:10.5px;text-transform:uppercase;letter-spacing:0.08em;
+    color:var(--reef);background:rgba(31,138,112,0.1);padding:3px 8px;border-radius:5px;margin-bottom:6px;display:inline-block;
+  }
+  .thread-title{font-family:'Fraunces',serif;font-size:16px;font-weight:600;margin:0 0 4px;}
+  .thread-meta{font-size:12.5px;color:#5B6B65;}
+  .thread-stats{text-align:right;flex:none;font-family:'IBM Plex Mono',monospace;font-size:12px;color:#5B6B65;}
+  .post-row{padding:14px 0;border-bottom:1px solid rgba(11,22,32,0.06);}
+  .post-author{font-weight:600;font-size:13.5px;}
+  .post-time{font-size:11.5px;color:#8A9691;margin-left:8px;}
+  .post-body{font-size:14px;color:#354340;margin:6px 0 0;line-height:1.6;}
+
+  /* ---- DIVE SITES ---- */
+  .site-card{
+    background:#fff;border-radius:12px;overflow:hidden;border:1px solid rgba(11,22,32,0.08);cursor:pointer;
+    transition:transform .18s ease, box-shadow .18s ease;
+  }
+  .site-card:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(11,22,32,0.12);}
+  .site-photo{height:140px;position:relative;display:flex;align-items:flex-end;padding:12px;}
+  .experience-card{padding:14px 0;border-bottom:1px solid rgba(11,22,32,0.07);}
+  .experience-media{width:100%;max-height:220px;object-fit:cover;border-radius:8px;margin-top:8px;}
+  .blocked-range{display:inline-flex;align-items:center;gap:6px;background:rgba(225,99,63,0.08);color:var(--coral);border:1px solid rgba(225,99,63,0.3);font-size:12px;padding:5px 10px;border-radius:999px;margin:0 6px 6px 0;}
+  .blocked-range button{background:none;border:none;color:var(--coral);cursor:pointer;font-size:13px;line-height:1;padding:0;}
+  .booking-status{font-size:11.5px;font-family:'IBM Plex Mono',monospace;padding:3px 9px;border-radius:999px;text-transform:uppercase;letter-spacing:0.04em;}
+  .msg-row{padding:12px 0;border-bottom:1px solid rgba(11,22,32,0.07);}
+
+  /* ---- DIVE SHOPS ---- */
+  .shop-card{
+    background:#fff;border-radius:12px;padding:20px;border:1px solid rgba(11,22,32,0.08);display:flex;flex-direction:column;gap:8px;
+  }
+  .shop-services{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;}
+  .tier-inner{
+    max-width:1180px;margin:0 auto;padding:22px 24px;
+    display:flex;align-items:center;gap:28px;flex-wrap:wrap;color:var(--foam);
+  }
+  .tier-label{font-size:13px;color:rgba(242,246,243,0.65);margin-right:6px;}
+  .tier{
+    display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500;
+    border:1px solid var(--line);padding:7px 13px;border-radius:999px;
+  }
+  .tier .badge-dot{width:6px;height:6px;border-radius:50%;}
+  .tier.ow .badge-dot{background:#7FB8D9;}
+  .tier.aow .badge-dot{background:#2FAE8F;}
+  .tier.rescue .badge-dot{background:#D9A66C;}
+  .tier.pro .badge-dot{background:#E1633F;}
+
+  /* ---------- SECTIONS ---------- */
+  section{max-width:1180px;margin:0 auto;padding:64px 24px;}
+  .section-head{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;margin-bottom:32px;flex-wrap:wrap;}
+  .section-head h2{font-size:30px;margin:0 0 8px;font-weight:600;}
+  .section-head p{margin:0;color:#4B5A55;font-size:15px;max-width:480px;}
+  .eyebrow-dark{
+    font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;
+    color:var(--reef);margin-bottom:10px;display:block;
+  }
+
+  /* filter bar */
+  .filter-bar{
+    display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:28px;
+    padding:14px;background:var(--foam-2);border-radius:10px;border:1px solid rgba(11,22,32,0.06);
+  }
+  .filter-bar select, .filter-bar input{
+    border:1px solid rgba(11,22,32,0.15);background:#fff;border-radius:6px;padding:9px 12px;font-size:13px;font-family:inherit;color:var(--ink);
+  }
+  .filter-count{margin-left:auto;font-size:13px;color:#5B6B65;font-family:'IBM Plex Mono',monospace;}
+
+  /* listing grid */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:22px;}
+  .card{
+    background:#fff;border-radius:12px;overflow:hidden;border:1px solid rgba(11,22,32,0.08);
+    transition:transform .18s ease, box-shadow .18s ease;cursor:pointer;
+  }
+  .card:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(11,22,32,0.12);}
+  .card-photo{
+    height:170px;position:relative;
+    display:flex;align-items:flex-end;padding:12px;
+  }
+  .card-photo .wave{position:absolute;inset:0;opacity:0.5;}
+  .card-photo .loc-tag{
+    position:relative;z-index:2;background:rgba(10,25,41,0.55);backdrop-filter:blur(3px);
+    color:var(--foam);font-size:12px;padding:5px 10px;border-radius:6px;font-family:'IBM Plex Mono',monospace;
+  }
+  .card-body{padding:16px 18px 18px;}
+  .card-title{font-family:'Fraunces',serif;font-size:18px;font-weight:600;margin:0 0 4px;}
+  .card-sub{font-size:13px;color:#5B6B65;margin:0 0 12px;}
+  .stat-row{display:flex;gap:14px;margin-bottom:14px;flex-wrap:wrap;}
+  .stat{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#3D4C47;}
+  .stat b{display:block;font-size:14px;color:var(--ink);font-weight:600;}
+  .card-foot{display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(11,22,32,0.07);padding-top:12px;}
+  .price{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:15px;}
+  .price span{font-weight:400;color:#5B6B65;font-size:12px;}
+  .host-badge{
+    display:flex;align-items:center;gap:6px;font-size:11.5px;color:#3D4C47;
+    background:var(--foam-2);padding:5px 9px;border-radius:999px;
+  }
+  .host-badge .dot{width:6px;height:6px;border-radius:50%;}
+
+  /* CTA host section */
+  .host-cta{
+    background:var(--depth);color:var(--foam);border-radius:16px;
+    padding:52px 44px;display:grid;grid-template-columns:1.3fr 0.7fr;gap:30px;align-items:center;
+    position:relative;overflow:hidden;
+  }
+  .host-cta h2{font-size:28px;margin:0 0 12px;}
+  .host-cta p{color:rgba(242,246,243,0.75);font-size:15px;line-height:1.6;margin:0 0 22px;max-width:440px;}
+  .host-perks{list-style:none;padding:0;margin:0 0 26px;display:flex;flex-direction:column;gap:8px;}
+  .host-perks li{font-size:13.5px;color:rgba(242,246,243,0.85);display:flex;gap:8px;align-items:center;}
+  .host-perks li::before{content:'';width:5px;height:5px;background:var(--sand);border-radius:50%;flex:none;}
+
+  footer{
+    background:var(--abyss);color:rgba(242,246,243,0.6);padding:44px 24px 30px;
+  }
+  .footer-inner{max-width:1180px;margin:0 auto;}
+  .footer-top{display:flex;justify-content:space-between;flex-wrap:wrap;gap:20px;border-bottom:1px solid var(--line);padding-bottom:26px;margin-bottom:20px;}
+  .footer-note{font-size:12.5px;line-height:1.7;max-width:560px;}
+  .footer-bottom{display:flex;justify-content:space-between;font-size:12px;flex-wrap:wrap;gap:10px;}
+
+  /* ---------- MODALS ---------- */
+  .overlay{
+    position:fixed;inset:0;background:rgba(10,25,41,0.6);backdrop-filter:blur(2px);
+    display:none;align-items:center;justify-content:center;z-index:100;padding:20px;
+  }
+  .overlay.open{display:flex;}
+  .modal{
+    background:#fff;border-radius:14px;max-width:560px;width:100%;max-height:88vh;overflow-y:auto;
+    padding:32px;position:relative;
+  }
+  .modal.wide{max-width:760px;}
+  .modal-close{
+    position:absolute;top:18px;right:18px;width:32px;height:32px;border-radius:50%;border:none;
+    background:var(--foam-2);font-size:16px;color:#3D4C47;
+  }
+  .modal h3{font-size:24px;margin:0 0 6px;}
+  .modal .sub{color:#5B6B65;font-size:13.5px;margin:0 0 24px;}
+  .form-row{margin-bottom:16px;}
+  .form-row label{display:block;font-size:12.5px;font-weight:600;color:var(--ink);margin-bottom:6px;letter-spacing:0.01em;}
+  .form-row input, .form-row select, .form-row textarea{
+    width:100%;border:1px solid rgba(11,22,32,0.18);border-radius:7px;padding:11px 12px;font-size:14px;font-family:inherit;
+  }
+  .form-row textarea{resize:vertical;min-height:80px;}
+  .form-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .checks{display:flex;flex-wrap:wrap;gap:10px;}
+  .check-pill{
+    display:flex;align-items:center;gap:6px;border:1px solid rgba(11,22,32,0.18);padding:8px 12px;border-radius:8px;font-size:13px;
+  }
+  .modal-submit{width:100%;padding:13px;font-size:14.5px;border-radius:8px;margin-top:6px;}
+
+  /* listing detail modal */
+  .detail-hero{height:190px;border-radius:10px;margin-bottom:18px;position:relative;overflow:hidden;display:flex;align-items:flex-end;padding:14px;}
+  .detail-meta{display:flex;gap:20px;flex-wrap:wrap;margin:18px 0;padding:16px;background:var(--foam-2);border-radius:10px;}
+  .detail-meta .stat b{font-size:16px;}
+  .detail-desc{font-size:14.5px;line-height:1.7;color:#354340;margin-bottom:18px;}
+  .amenity-list{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px;}
+  .amenity{background:var(--foam-2);font-size:12.5px;padding:6px 11px;border-radius:999px;color:#354340;}
+
+  .toast{
+    position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(120%);
+    background:var(--abyss);color:var(--foam);padding:13px 22px;border-radius:8px;font-size:13.5px;
+    display:flex;align-items:center;gap:10px;z-index:200;transition:transform .3s ease;box-shadow:0 10px 30px rgba(0,0,0,0.25);
+  }
+  .toast.show{transform:translateX(-50%) translateY(0);}
+  .install-banner.show{display:flex !important;}
+  .toast .dot{width:7px;height:7px;border-radius:50%;background:var(--reef-light);}
+
+  .skeleton{
+    height:170px;border-radius:12px;background:linear-gradient(90deg,var(--foam-2) 25%,#fff 37%,var(--foam-2) 63%);
+    background-size:400% 100%;animation:shimmer 1.4s ease infinite;
+  }
+  @keyframes shimmer{0%{background-position:100% 0;}100%{background-position:0 0;}}
+
+  .nav-hamburger{display:none;background:none;border:none;color:var(--foam);padding:6px;cursor:pointer;}
+  .nav-hamburger svg{display:block;}
+  @media (max-width:860px){
+    .hero-inner{grid-template-columns:1fr;padding-top:48px;}
+    .hero h1{font-size:38px;}
+    .host-cta{grid-template-columns:1fr;padding:36px 24px;}
+    .form-grid-2{grid-template-columns:1fr;}
+    .nav-hamburger{display:block;}
+    .nav-links{
+      display:none;position:absolute;top:100%;left:0;right:0;
+      flex-direction:column;align-items:stretch;gap:0;
+      background:rgb(0,25,50);border-bottom:1px solid var(--line);
+      padding:8px 24px 16px;
+    }
+    .nav-links.mobile-open{display:flex;}
+    .nav-links a, .nav-links .btn, .nav-links .member-pill{
+      width:100%;box-sizing:border-box;padding:12px 4px;text-align:left;
+      border-radius:0;border-bottom:1px solid var(--line);
+    }
+  }
+  :focus-visible{outline:2px solid var(--reef-light);outline-offset:2px;}
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none !important;transition:none !important;}
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<div class="nav">
+  <div class="nav-inner" style="position:relative;">
+    <a href="#" class="logo"><img src="/logo.png" alt="Shore Interval logo" width="64" height="64" style="flex:none;object-fit:contain;border-radius:6px;">Shore Interval</a>
+    <button class="nav-hamburger" id="navHamburger" aria-label="Menu" aria-expanded="false">
+      <svg width="26" height="26" viewBox="0 0 26 26" fill="none"><path d="M4 7h18M4 13h18M4 19h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <div class="nav-links" id="navLinks">
+      <a href="#host" id="hostLink">List your place</a>
+      <span class="member-pill" id="memberPill"><span class="dot" id="memberDot" style="width:6px;height:6px;border-radius:50%;background:#2FAE8F;"></span><span id="memberName"></span></span>
+      <button class="btn btn-ghost" id="joinNavBtn">Member Login / Sign Up</button>
+    </div>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="eyebrow">Certified divers</div>
+      <h1>Between dives,<br>connect with people<br>who <em>get it.</em></h1>
+      <p style="font-family:'Fraunces',serif;font-style:italic;font-size:19px;color:var(--reef-light);margin:0 0 14px;">Shore Interval is a diver-to-diver community built by and for divers.</p>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(242,246,243,0.65);margin:0 0 26px;">Dive <span style="color:var(--sand);">·</span> Connect <span style="color:var(--sand);">·</span> Repeat</div>
+      <div class="hero-ctas">
+        <button class="btn btn-reef" onclick="document.querySelector('.tab-btn[data-tab=\'member-signup\']').click()">Become a member</button>
+      </div>
+      <div class="hero-note">14 destinations logged this season · gear storage and rinse tanks verified on every listing</div>
+    </div>
+    <div>
+      <div class="gauge-wrap">
+        <svg width="300" height="300" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="150" cy="150" r="138" fill="none" stroke="#1B4A63" stroke-width="1"/>
+          <circle cx="150" cy="150" r="118" fill="#0E2E40" stroke="#2FAE8F" stroke-width="1.5" opacity="0.9"/>
+          <!-- ticks -->
+          <g stroke="#7FA9BC" stroke-width="1.5">
+            <line x1="150" y1="34" x2="150" y2="48"/>
+            <line x1="216" y1="53" x2="207" y2="63"/>
+            <line x1="264" y1="99" x2="253" y2="107"/>
+            <line x1="266" y1="150" x2="252" y2="150"/>
+            <line x1="264" y1="201" x2="253" y2="193"/>
+            <line x1="216" y1="247" x2="207" y2="237"/>
+            <line x1="150" y1="266" x2="150" y2="252"/>
+            <line x1="84" y1="247" x2="93" y2="237"/>
+            <line x1="36" y1="201" x2="47" y2="193"/>
+            <line x1="34" y1="150" x2="48" y2="150"/>
+            <line x1="36" y1="99" x2="47" y2="107"/>
+            <line x1="84" y1="53" x2="93" y2="63"/>
+          </g>
+          <text x="150" y="66" fill="#B9D6E3" font-family="IBM Plex Mono, monospace" font-size="11" text-anchor="middle">0m</text>
+          <text x="252" y="153" fill="#B9D6E3" font-family="IBM Plex Mono, monospace" font-size="11" text-anchor="middle">18m</text>
+          <text x="150" y="248" fill="#B9D6E3" font-family="IBM Plex Mono, monospace" font-size="11" text-anchor="middle">30m</text>
+          <text x="49" y="153" fill="#B9D6E3" font-family="IBM Plex Mono, monospace" font-size="11" text-anchor="middle">40m</text>
+          <!-- needle -->
+          <g transform="rotate(58 150 150)">
+            <line x1="150" y1="150" x2="150" y2="62" stroke="#D9A66C" stroke-width="2.5" stroke-linecap="round"/>
+          </g>
+          <circle cx="150" cy="150" r="7" fill="#D9A66C"/>
+          <text x="150" y="185" fill="#F2F6F3" font-family="Fraunces, serif" font-size="15" font-weight="600" text-anchor="middle">VERIFIED</text>
+          <text x="150" y="200" fill="#2FAE8F" font-family="IBM Plex Mono, monospace" font-size="9.5" letter-spacing="1.5" text-anchor="middle">MEMBER STATUS</text>
+        </svg>
+      </div>
+      <div class="gauge-caption">every stay, buddy-checked</div>
+    </div>
+  </div>
+</div>
+
+<!-- TIER STRIP -->
+<div class="tier-strip">
+  <div class="tier-inner">
+    <span class="tier-label">Membership opens at</span>
+    <div class="tier ow"><span class="badge-dot"></span>Open Water</div>
+    <div class="tier aow"><span class="badge-dot"></span>Advanced</div>
+    <div class="tier rescue"><span class="badge-dot"></span>Rescue</div>
+    <div class="tier pro"><span class="badge-dot"></span>Divemaster / Pro</div>
+    <span style="font-size:12.5px;color:rgba(242,246,243,0.5);margin-left:auto;">Cert level is shown on every profile, never gate-kept after that</span>
+  </div>
+</div>
+
+<!-- TAB BAR -->
+<div class="tab-bar">
+  <div class="tab-bar-inner">
+    <button class="tab-btn active" data-tab="browse">Dive houses</button>
+    <button class="tab-btn" data-tab="sites">Dive sites</button>
+    <button class="tab-btn" data-tab="trips">Dive trips</button>
+    <button class="tab-btn" data-tab="shops">Dive shops</button>
+    <button class="tab-btn" data-tab="forums">Community</button>
+    <button class="tab-btn" data-tab="member-signup" style="display:none;">Become a member</button>
+    <button class="tab-btn" data-tab="host-signup" style="display:none;">Become a host</button>
+  </div>
+</div>
+
+<div class="tab-panel active" id="tab-browse">
+<!-- BROWSE -->
+<section id="browse">
+  <div class="section-head">
+    <div>
+      <span class="eyebrow-dark">The logbook</span>
+      <h2>Places to surface between dives</h2>
+      <p>Real dive houses, boat docks, and dockside rooms listed by members near the sites they dive most.</p>
+    </div>
+    <button class="btn btn-reef" id="browseListBtn">List your place</button>
+  </div>
+
+  <div class="filter-bar">
+    <select id="regionFilter">
+      <option value="">All regions</option>
+      <option>Caribbean</option>
+      <option>Red Sea</option>
+      <option>Indo-Pacific</option>
+      <option>Southeast Asia</option>
+      <option>Central America</option>
+    </select>
+    <select id="sortFilter">
+      <option value="recommended">Sort: recommended</option>
+      <option value="price-asc">Price: low to high</option>
+      <option value="price-desc">Price: high to low</option>
+      <option value="viz-desc">Visibility: best first</option>
+    </select>
+    <input type="text" id="searchInput" placeholder="Search by site or location…">
+    <span class="filter-count" id="filterCount"></span>
+  </div>
+
+  <div class="grid" id="listingGrid">
+    <div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>
+  </div>
+</section>
+
+<!-- COMMUNITY CTA -->
+<section id="host">
+  <div class="host-cta">
+    <div>
+      <span class="eyebrow-dark" style="color:var(--reef-light);">Built by divers, for divers</span>
+      <h2>More than a place to stay</h2>
+      <p>Trip reports, gear talk, buddy requests, and dive site notes from people who've actually been there — the community is the whole point, not just the listings.</p>
+      <ul class="host-perks">
+        <li>Swap trip reports and conditions before you book</li>
+        <li>Find a buddy for your next trip in the forum</li>
+        <li>Read real member experiences on dive sites and shops</li>
+      </ul>
+    </div>
+    <svg width="100%" height="180" viewBox="0 0 260 180" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 140 Q 30 120 60 140 T 120 140 T 180 140 T 260 140" stroke="#2FAE8F" stroke-width="1.5" fill="none" opacity="0.5"/>
+      <path d="M0 160 Q 30 145 60 160 T 120 160 T 180 160 T 260 160" stroke="#D9A66C" stroke-width="1.5" fill="none" opacity="0.4"/>
+      <circle cx="200" cy="60" r="26" fill="none" stroke="#7FA9BC" stroke-width="1.5"/>
+      <circle cx="200" cy="60" r="3" fill="#D9A66C"/>
+      <line x1="200" y1="60" x2="200" y2="42" stroke="#D9A66C" stroke-width="2"/>
+    </svg>
+  </div>
+</section>
+</div> <!-- /tab-browse -->
+
+<!-- ============ FORUM TAB ============ -->
+<div class="tab-panel" id="tab-forums">
+  <section>
+    <div class="section-head">
+      <div>
+        <span class="eyebrow-dark">Talk shop</span>
+        <h2>Community forum</h2>
+        <p>Trip reports, gear questions, buddy requests, "is this normal" panic posts at 2am before a trip. All members welcome to read; posting needs an approved membership.</p>
+      </div>
+      <button class="btn btn-reef" id="newThreadBtn">Start a thread</button>
+    </div>
+    <div id="threadList"></div>
+  </section>
+</div>
+
+<!-- ============ DIVE SITES TAB ============ -->
+<div class="tab-panel" id="tab-sites">
+  <section>
+    <div class="section-head">
+      <div>
+        <span class="eyebrow-dark">Field notes</span>
+        <h2>Dive sites, from people who've actually been</h2>
+        <p>Conditions change. These are member accounts and photos — not a dive shop brochure. New sites go through a quick review before they're listed.</p>
+      </div>
+      <button class="btn btn-reef" id="newSiteBtn">Suggest a dive site</button>
+    </div>
+    <div class="grid" id="siteGrid"></div>
+  </section>
+</div>
+
+<!-- ============ DIVE TRIPS TAB ============ -->
+<div class="tab-panel" id="tab-trips">
+  <section>
+    <div class="section-head">
+      <div>
+        <span class="eyebrow-dark">Go together</span>
+        <h2>Trips other members are planning</h2>
+        <p>Group trips, liveaboards, or "I booked a week in Raja Ampat, come along" posts. New trips go through a quick review before they're listed.</p>
+      </div>
+      <button class="btn btn-reef" id="newTripBtn">Propose a trip</button>
+    </div>
+    <div class="grid" id="tripGrid"></div>
+  </section>
+</div>
+
+<!-- ============ DIVE SHOPS TAB ============ -->
+<div class="tab-panel" id="tab-shops">
+  <section>
+    <div class="section-head">
+      <div>
+        <span class="eyebrow-dark">On the ground</span>
+        <h2>Dive shops members trust</h2>
+        <p>Fill stations, boat charters, and rental counters recommended by the people who've actually used them.</p>
+      </div>
+      <button class="btn btn-reef" id="newShopBtn">Add a dive shop</button>
+    </div>
+    <div class="grid" id="shopGrid"></div>
+  </section>
+</div>
+
+<!-- ============ MEMBER SIGN-UP TAB ============ -->
+<div class="tab-panel" id="tab-member-signup">
+  <section style="max-width:640px;">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow-dark">Join the community</span>
+        <h2>Sign up as a member</h2>
+        <p>Create your account and verify your certification. A real person reviews every application before you can book or take part.</p>
+      </div>
+    </div>
+    <form id="memberSignupForm">
+      <div class="form-grid-2">
+        <div class="form-row">
+          <label for="msName">Full name</label>
+          <input type="text" id="msName" required placeholder="e.g. Priya Nair">
+        </div>
+        <div class="form-row">
+          <label for="msEmail">Email</label>
+          <input type="email" id="msEmail" required placeholder="you@example.com">
+        </div>
+      </div>
+      <div class="form-grid-2">
+        <div class="form-row">
+          <label for="msPassword">Password</label>
+          <input type="password" id="msPassword" required minlength="8" autocomplete="new-password">
+        </div>
+        <div class="form-row">
+          <label for="msPasswordConfirm">Confirm password</label>
+          <input type="password" id="msPasswordConfirm" required minlength="8" autocomplete="new-password">
+        </div>
+      </div>
+      <div class="form-grid-2">
+        <div class="form-row">
+          <label for="msAgency">Certifying agency</label>
+          <select id="msAgency">
+            <option>PADI</option>
+            <option>SSI</option>
+            <option>NAUI</option>
+            <option>BSAC</option>
+            <option>CMAS</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label for="msCert">Certification level</label>
+          <select id="msCert">
+            <option>Open Water</option>
+            <option>Advanced</option>
+            <option>Rescue</option>
+            <option>Divemaster / Pro</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <label for="msCertNumber">Certification number (optional for this preview)</label>
+        <input type="text" id="msCertNumber" placeholder="e.g. AB1234567">
+      </div>
+      <div class="form-row">
+        <label for="msCertPhoto">Photo of your certification card (ID)</label>
+        <input type="file" id="msCertPhoto" accept="image/*" required>
+        <div id="msCertPreviewWrap" style="display:none;margin-top:10px;">
+          <img id="msCertPreview" style="max-width:100%;max-height:160px;border-radius:8px;border:1px solid rgba(11,22,32,0.15);">
+        </div>
+      </div>
+      <div class="form-row">
+        <label for="msBio">Profile — tell other members a bit about you</label>
+        <textarea id="msBio" placeholder="Home dive site, favorite kind of diving, how long you've been certified..."></textarea>
+      </div>
+      <div style="background:var(--foam-2);border-radius:8px;padding:12px 14px;margin-bottom:16px;font-size:12.5px;color:#354340;line-height:1.6;">
+        <strong>No booking fee, ever.</strong> As a member you pay the nightly rate plus any extras the host sets — always shown before you book.
+      </div>
+      <button type="submit" class="btn btn-reef modal-submit">Create account</button>
+      <p style="font-size:12px;color:#5B6B65;margin:10px 0 0;">You'll get "pending" status right away. Booking unlocks once a reviewer approves your cert.</p>
+    </form>
+  </section>
+</div>
+
+<!-- ============ HOST SIGN-UP TAB ============ -->
+<div class="tab-panel" id="tab-host-signup">
+  <section style="max-width:640px;">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow-dark">Got a place near the water?</span>
+        <h2>Sign up as a host</h2>
+        <p>Create your host account and verify your certification. Once approved, you'll be able to list your place with photos, pricing, and availability.</p>
+      </div>
+    </div>
+    <form id="hostSignupForm">
+      <div class="form-grid-2">
+        <div class="form-row">
+          <label for="hsName">Full name</label>
+          <input type="text" id="hsName" required placeholder="e.g. Marco T.">
+        </div>
+        <div class="form-row">
+          <label for="hsEmail">Email</label>
+          <input type="email" id="hsEmail" required placeholder="you@example.com">
+        </div>
+      </div>
+      <div class="form-grid-2">
+        <div class="form-row">
+          <label for="hsPassword">Password</label>
+          <input type="password" id="hsPassword" required minlength="8" autocomplete="new-password">
+        </div>
+        <div class="form-row">
+          <label for="hsPasswordConfirm">Confirm password</label>
+          <input type="password" id="hsPasswordConfirm" required minlength="8" autocomplete="new-password">
+        </div>
+      </div>
+      <div class="form-grid-2">
+        <div class="form-row">
+          <label for="hsAgency">Certifying agency</label>
+          <select id="hsAgency">
+            <option>PADI</option>
+            <option>SSI</option>
+            <option>NAUI</option>
+            <option>BSAC</option>
+            <option>CMAS</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label for="hsCert">Certification level</label>
+          <select id="hsCert">
+            <option>Open Water</option>
+            <option>Advanced</option>
+            <option>Rescue</option>
+            <option>Divemaster / Pro</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <label for="hsCertNumber">Certification number (optional for this preview)</label>
+        <input type="text" id="hsCertNumber" placeholder="e.g. AB1234567">
+      </div>
+      <div class="form-row">
+        <label for="hsCertPhoto">Photo of your certification card (ID)</label>
+        <input type="file" id="hsCertPhoto" accept="image/*" required>
+        <div id="hsCertPreviewWrap" style="display:none;margin-top:10px;">
+          <img id="hsCertPreview" style="max-width:100%;max-height:160px;border-radius:8px;border:1px solid rgba(11,22,32,0.15);">
+        </div>
+      </div>
+      <div class="form-row">
+        <label for="hsBio">Profile — tell members a bit about you and your place</label>
+        <textarea id="hsBio" placeholder="Where you're located, what makes your place worth a stay, how long you've hosted divers..."></textarea>
+      </div>
+      <div style="background:var(--foam-2);border-radius:8px;padding:12px 14px;margin-bottom:16px;font-size:12.5px;color:#354340;line-height:1.6;">
+        <strong>Shore Interval takes 12% of each booking's nightly total.</strong> No listing fee, no monthly charge. Once approved, add your specific place (photos, price, extra fees) from the nav.
+      </div>
+      <button type="submit" class="btn btn-sand modal-submit">Create host account</button>
+      <p style="font-size:12px;color:#5B6B65;margin:10px 0 0;">You'll get "pending" status right away. Listing a place unlocks once a reviewer approves your cert.</p>
+    </form>
+  </section>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <a href="#" class="logo" style="color:#F2F6F3;"><img src="/logo.png" alt="Shore Interval logo" width="64" height="64" style="flex:none;object-fit:contain;border-radius:6px;">Shore Interval</a>
+      </div>
+      <div class="footer-note">Shore Interval is a member-run marketplace. Listings are shared between certified divers; we don't inspect properties or verify dive conditions in real time. Always confirm site conditions locally and never dive beyond your certification and experience level.</div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Shore Interval — a prototype, built for divers.</span>
+      <span>Buddy-checked, not liability-covered.</span>
+      <a href="#" id="adminLink" style="color:rgba(242,246,243,0.4);text-decoration:underline;">Admin review</a>
+    </div>
+  </div>
+</footer>
+
+<!-- TOAST -->
+<div class="toast" id="toast"><span class="dot"></span><span id="toastText"></span></div>
+
+<!-- INSTALL APP BANNER -->
+<div id="installBanner" class="install-banner" style="display:none;position:fixed;bottom:16px;left:16px;right:16px;max-width:420px;margin:0 auto;background:var(--abyss);color:var(--foam);border-radius:12px;padding:14px 16px;box-shadow:0 12px 32px rgba(0,0,0,0.3);z-index:150;align-items:center;gap:12px;">
+  <div style="flex:1;font-size:13px;line-height:1.4;">
+    <strong style="display:block;font-family:'Fraunces',serif;font-size:14.5px;margin-bottom:2px;">Install Shore Interval</strong>
+    Add it to your home screen for quick access.
+  </div>
+  <button class="btn btn-reef" id="installBtn" style="padding:8px 14px;font-size:12.5px;flex:none;">Install</button>
+  <button id="installDismiss" style="background:none;border:none;color:rgba(242,246,243,0.5);font-size:18px;padding:0 4px;flex:none;">✕</button>
+</div>
+
+<!-- LOG IN MODAL -->
+<div class="overlay" id="loginOverlay">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('loginOverlay')">✕</button>
+    <h3>Log in</h3>
+    <p class="sub">Welcome back.</p>
+    <form id="loginForm">
+      <div class="form-row">
+        <label for="loginEmail">Email</label>
+        <input type="email" id="loginEmail" required placeholder="you@example.com">
+      </div>
+      <div class="form-row">
+        <label for="loginPassword">Password</label>
+        <input type="password" id="loginPassword" required autocomplete="current-password">
+      </div>
+      <button type="submit" class="btn btn-reef modal-submit">Log in</button>
+    </form>
+    <p style="font-size:13px;color:#5B6B65;margin:16px 0 0;text-align:center;">
+      New here?
+      <a href="#" onclick="closeModal('loginOverlay'); document.querySelector('.tab-btn[data-tab=\'member-signup\']').click(); return false;" style="color:var(--reef);font-weight:600;">Become a member</a>
+      or
+      <a href="#" onclick="closeModal('loginOverlay'); document.querySelector('.tab-btn[data-tab=\'host-signup\']').click(); return false;" style="color:var(--reef);font-weight:600;">become a host</a>.
+    </p>
+  </div>
+</div>
+
+<!-- JOIN MODAL -->
+<div class="overlay" id="joinOverlay">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('joinOverlay')">✕</button>
+    <h3>Join Shore Interval</h3>
+    <p class="sub">Membership is limited to certified divers. Upload a photo of your cert card — a real person reviews every application before you can book or host.</p>
+    <form id="joinForm">
+      <div class="form-row">
+        <label for="joinName">Full name</label>
+        <input type="text" id="joinName" required placeholder="e.g. Priya Nair">
+      </div>
+      <div class="form-row">
+        <label for="joinEmail">Email</label>
+        <input type="email" id="joinEmail" required placeholder="you@example.com">
+      </div>
+      <div class="form-grid-2">
+        <div class="form-row">
+          <label for="joinAgency">Certifying agency</label>
+          <select id="joinAgency">
+            <option>PADI</option>
+            <option>SSI</option>
+            <option>NAUI</option>
+            <option>BSAC</option>
+            <option>CMAS</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label for="joinCert">Certification level</label>
+          <select id="joinCert">
+            <option>Open Water</option>
+            <option>Advanced</option>
+            <option>Rescue</option>
+            <option>Divemaster / Pro</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <label for="joinNumber">Certification number (optional for this preview)</label>
+        <input type="text" id="joinNumber" placeholder="e.g. AB1234567">
+      </div>
+      <div class="form-row">
+        <label for="joinCertPhoto">Photo of your certification card</label>
+        <input type="file" id="joinCertPhoto" accept="image/*" required>
+        <div id="certPreviewWrap" style="display:none;margin-top:10px;">
+          <img id="certPreview" style="max-width:100%;max-height:160px;border-radius:8px;border:1px solid rgba(11,22,32,0.15);">
+        </div>
+      </div>
+      <div style="background:var(--foam-2);border-radius:8px;padding:12px 14px;margin-bottom:16px;font-size:12.5px;color:#354340;line-height:1.6;">
+        <strong>No booking fee, ever.</strong> As a member you pay the nightly rate plus any extras the host sets (like a cleaning or tank-fill fee) — always shown before you book.
+      </div>
+      <button type="submit" class="btn btn-reef modal-submit">Submit for review</button>
+      <p style="font-size:12px;color:#5B6B65;margin:10px 0 0;">You'll get "pending" status right away. Booking and hosting unlock once a reviewer approves your cert.</p>
+    </form>
+  </div>
+</div>
+
+<!-- ADD LISTING MODAL -->
+<div class="overlay" id="listOverlay">
+  <div class="modal wide">
+    <button class="modal-close" onclick="closeModal('listOverlay')">✕</button>
+    <h3>Host application</h3>
+    <p class="sub">This is separate from joining as a member — you're already verified. Now tell us about the place itself: photos, location, and exactly what it costs to stay.</p>
+    <div style="background:var(--foam-2);border-radius:8px;padding:12px 14px;margin-bottom:20px;font-size:12.5px;color:#354340;line-height:1.6;">
+      <strong>Shore Interval takes 12% of each booking's nightly total.</strong> No listing fee, no monthly charge. Add your own extra fees below (cleaning, tank-fill, etc.) — those go straight to you.
+    </div>
+    <form id="listForm">
+      <div class="form-row">
+        <label for="lPhoto">Photo of the house</label>
+        <input type="file" id="lPhoto" accept="image/*">
+        <div id="lPhotoPreviewWrap" style="display:none;margin-top:10px;">
+          <img id="lPhotoPreview" style="max-width:100%;max-height:180px;border-radius:8px;border:1px solid rgba(11,22,32,0.15);">
+        </div>
+      </div>
+      <div class="form-grid-2">
+        <div class="form-row">
+          <label for="lTitle">Listing title</label>
+          <input type="text" id="lTitle" required placeholder="e.g. Dock house on the house reef">
+        </div>
+        <div class="form-row">
+          <label for="lLocation">Location</label>
+          <input type="text" id="lLocation" required placeholder="e.g. Bonaire, Dutch Caribbean">
+        </div>
+      </div>
+      <div class="form-grid-2">
+        <div class="form-row">
+          <label for="lRegion">Region</label>
+          <select id="lRegion">
+            <option>Caribbean</option>
+            <option>Red Sea</option>
+            <option>Indo-Pacific</option>
+            <option>Southeast Asia</option>
+            <option>Central America</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label for="lSite">Nearest dive site</label>
+          <input type="text" id="lSite" required placeholder="e.g. Salt Pier">
+        </div>
+      </div>
+      <div class="form-grid-2">
+        <div class="form-row">
+          <label for="lViz">Typical visibility (m)</label>
+          <input type="number" id="lViz" required placeholder="e.g. 25">
+        </div>
+        <div class="form-row">
+          <label for="lDepth">Max nearby depth (m)</label>
+          <input type="number" id="lDepth" required placeholder="e.g. 30">
+        </div>
+      </div>
+      <div class="form-grid-2">
+        <div class="form-row">
+          <label for="lPrice">Price per night (USD)</label>
+          <input type="number" id="lPrice" required placeholder="e.g. 120">
+        </div>
+        <div class="form-row">
+          <label for="lHostCert">Your certification level</label>
+          <select id="lHostCert">
+            <option>Open Water</option>
+            <option>Advanced</option>
+            <option>Rescue</option>
+            <option>Divemaster / Pro</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-grid-2">
+        <div class="form-row">
+          <label for="lCleaningFee">Cleaning fee, USD (optional)</label>
+          <input type="number" id="lCleaningFee" placeholder="e.g. 20">
+        </div>
+        <div class="form-row">
+          <label for="lTankFee">Tank-fill fee, USD (optional)</label>
+          <input type="number" id="lTankFee" placeholder="e.g. 8">
+        </div>
+      </div>
+      <div class="form-row">
+        <label>Unavailable dates (optional)</label>
+        <div class="form-grid-2">
+          <input type="date" id="lBlockStart">
+          <input type="date" id="lBlockEnd">
+        </div>
+        <button type="button" class="btn btn-ghost" style="margin-top:8px;border-color:rgba(11,22,32,0.2);color:var(--ink);padding:8px 14px;font-size:12.5px;" onclick="addBlockedRange()">Add unavailable range</button>
+        <div id="lBlockedDatesList" style="margin-top:10px;"></div>
+      </div>
+      <div class="form-row">
+        <label for="lDesc">Description</label>
+        <textarea id="lDesc" required placeholder="What's it like to stay here? What's the water like this time of year?"></textarea>
+      </div>
+      <div class="form-row">
+        <label>Amenities</label>
+        <div class="checks">
+          <label class="check-pill"><input type="checkbox" value="Tank storage" class="amenity-check"> Tank storage</label>
+          <label class="check-pill"><input type="checkbox" value="Rinse station" class="amenity-check"> Rinse station</label>
+          <label class="check-pill"><input type="checkbox" value="Compressor access" class="amenity-check"> Compressor access</label>
+          <label class="check-pill"><input type="checkbox" value="Boat dock" class="amenity-check"> Boat dock</label>
+          <label class="check-pill"><input type="checkbox" value="Gear drying room" class="amenity-check"> Gear drying room</label>
+          <label class="check-pill"><input type="checkbox" value="Shore entry" class="amenity-check"> Shore entry</label>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-reef modal-submit">Publish listing</button>
+    </form>
+  </div>
+</div>
+
+<!-- LISTING DETAIL MODAL -->
+<div class="overlay" id="detailOverlay">
+  <div class="modal wide" id="detailModalBody"></div>
+</div>
+
+<!-- ADMIN SIGN-IN MODAL -->
+<div class="overlay" id="adminAuthOverlay">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('adminAuthOverlay')">✕</button>
+    <h3>Admin sign-in</h3>
+    <p class="sub">Enter the admin password to review applications and manage listings.</p>
+    <form id="adminAuthForm">
+      <div class="form-row">
+        <label for="adminPasswordInput">Password</label>
+        <input type="password" id="adminPasswordInput" required autocomplete="current-password">
+      </div>
+      <button type="submit" class="btn btn-reef modal-submit">Sign in</button>
+    </form>
+  </div>
+</div>
+
+<!-- ADMIN REVIEW MODAL -->
+<div class="overlay" id="adminOverlay">
+  <div class="modal wide">
+    <button class="modal-close" onclick="closeModal('adminOverlay')">✕</button>
+    <h3>Admin dashboard</h3>
+    <p class="sub">Review applications, and edit or remove anything on the site as it changes over time. This is a stand-in for a real admin tool — anyone can open this panel in the preview.</p>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px;border-bottom:1px solid rgba(11,22,32,0.1);padding-bottom:12px;">
+      <button class="btn btn-ghost admin-tab-btn active" data-admin-tab="membership" style="border-color:rgba(11,22,32,0.2);color:var(--ink);padding:8px 14px;font-size:13px;">Membership</button>
+      <button class="btn btn-ghost admin-tab-btn" data-admin-tab="stays" style="border-color:rgba(11,22,32,0.2);color:var(--ink);padding:8px 14px;font-size:13px;">House stays</button>
+      <button class="btn btn-ghost admin-tab-btn" data-admin-tab="sites" style="border-color:rgba(11,22,32,0.2);color:var(--ink);padding:8px 14px;font-size:13px;">Dive sites</button>
+      <button class="btn btn-ghost admin-tab-btn" data-admin-tab="trips" style="border-color:rgba(11,22,32,0.2);color:var(--ink);padding:8px 14px;font-size:13px;">Dive trips</button>
+      <button class="btn btn-ghost admin-tab-btn" data-admin-tab="shops" style="border-color:rgba(11,22,32,0.2);color:var(--ink);padding:8px 14px;font-size:13px;">Dive shops</button>
+      <button class="btn btn-ghost admin-tab-btn" data-admin-tab="bookings" style="border-color:rgba(11,22,32,0.2);color:var(--ink);padding:8px 14px;font-size:13px;">Bookings</button>
+      <button class="btn btn-ghost admin-tab-btn" data-admin-tab="messages" style="border-color:rgba(11,22,32,0.2);color:var(--ink);padding:8px 14px;font-size:13px;">Messages</button>
+    </div>
+    <div id="adminList"></div>
+  </div>
+</div>
+
+<!-- NEW THREAD MODAL -->
+<div class="overlay" id="newThreadOverlay">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('newThreadOverlay')">✕</button>
+    <h3>Start a thread</h3>
+    <p class="sub">Visible to the whole community.</p>
+    <form id="newThreadForm">
+      <div class="form-row">
+        <label for="threadCategory">Category</label>
+        <select id="threadCategory">
+          <option>Trip reports</option>
+          <option>Gear talk</option>
+          <option>Buddy requests</option>
+          <option>Safety & training</option>
+          <option>General</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label for="threadTitle">Title</label>
+        <input type="text" id="threadTitle" required placeholder="e.g. Anyone diving Raja Ampat in October?">
+      </div>
+      <div class="form-row">
+        <label for="threadBody">Your post</label>
+        <textarea id="threadBody" required placeholder="What's on your mind?"></textarea>
+      </div>
+      <button type="submit" class="btn btn-reef modal-submit">Post thread</button>
+    </form>
+  </div>
+</div>
+
+<!-- THREAD DETAIL MODAL -->
+<div class="overlay" id="threadOverlay">
+  <div class="modal wide" id="threadModalBody"></div>
+</div>
+
+<!-- SITE DETAIL MODAL -->
+<div class="overlay" id="siteOverlay">
+  <div class="modal wide" id="siteModalBody"></div>
+</div>
+
+<!-- NEW DIVE SHOP MODAL -->
+<div class="overlay" id="newShopOverlay">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('newShopOverlay')">✕</button>
+    <h3>Add a dive shop</h3>
+    <p class="sub">A shop you'd actually send a buddy to.</p>
+    <form id="newShopForm">
+      <div class="form-row">
+        <label for="shopName">Shop name</label>
+        <input type="text" id="shopName" required placeholder="e.g. Blue Corner Dive">
+      </div>
+      <div class="form-grid-2">
+        <div class="form-row">
+          <label for="shopLocation">Location</label>
+          <input type="text" id="shopLocation" required placeholder="e.g. Palau">
+        </div>
+        <div class="form-row">
+          <label for="shopArea">Region</label>
+          <select id="shopArea">
+            <option>Caribbean</option>
+            <option>Red Sea</option>
+            <option>Indo-Pacific</option>
+            <option>Southeast Asia</option>
+            <option>Central America</option>
+            <option>Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <label>Services</label>
+        <div class="checks">
+          <label class="check-pill"><input type="checkbox" value="Tank fills" class="shop-service-check"> Tank fills</label>
+          <label class="check-pill"><input type="checkbox" value="Gear rental" class="shop-service-check"> Gear rental</label>
+          <label class="check-pill"><input type="checkbox" value="Boat charters" class="shop-service-check"> Boat charters</label>
+          <label class="check-pill"><input type="checkbox" value="Courses" class="shop-service-check"> Courses</label>
+          <label class="check-pill"><input type="checkbox" value="Nitrox" class="shop-service-check"> Nitrox</label>
+          <label class="check-pill"><input type="checkbox" value="Repairs" class="shop-service-check"> Repairs</label>
+        </div>
+      </div>
+      <div class="form-row">
+        <label for="shopNote">Why you'd recommend them</label>
+        <textarea id="shopNote" required placeholder="What made them worth mentioning?"></textarea>
+      </div>
+      <button type="submit" class="btn btn-reef modal-submit">Submit</button>
+    </form>
+  </div>
+</div>
+
+<!-- NEW DIVE SITE MODAL -->
+<div class="overlay" id="newSiteOverlay">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('newSiteOverlay')">✕</button>
+    <h3>Suggest a dive site</h3>
+    <p class="sub">Goes to review before it's listed for everyone.</p>
+    <form id="newSiteForm">
+      <div class="form-row">
+        <label for="siteName">Site name</label>
+        <input type="text" id="siteName" required placeholder="e.g. Barracuda Point">
+      </div>
+      <div class="form-grid-2">
+        <div class="form-row">
+          <label for="siteLocation">Location</label>
+          <input type="text" id="siteLocation" required placeholder="e.g. Sipadan, Malaysia">
+        </div>
+        <div class="form-row">
+          <label for="siteArea">Region</label>
+          <select id="siteArea">
+            <option>Caribbean</option>
+            <option>Red Sea</option>
+            <option>Indo-Pacific</option>
+            <option>Southeast Asia</option>
+            <option>Central America</option>
+            <option>Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <label for="siteLevel">Recommended level</label>
+        <select id="siteLevel">
+          <option>Open Water</option>
+          <option>Advanced</option>
+          <option>Rescue</option>
+          <option>Divemaster / Pro</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label for="siteDesc">Description</label>
+        <textarea id="siteDesc" required placeholder="What's the site like? Currents, depth, what to expect."></textarea>
+      </div>
+      <button type="submit" class="btn btn-reef modal-submit">Submit</button>
+    </form>
+  </div>
+</div>
+
+<!-- NEW DIVE TRIP MODAL -->
+<div class="overlay" id="newTripOverlay">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('newTripOverlay')">✕</button>
+    <h3>Propose a trip</h3>
+    <p class="sub">Goes to review before it's listed for everyone.</p>
+    <form id="newTripForm">
+      <div class="form-row">
+        <label for="tripTitle">Trip title</label>
+        <input type="text" id="tripTitle" required placeholder="e.g. Liveaboard week in the Similans">
+      </div>
+      <div class="form-grid-2">
+        <div class="form-row">
+          <label for="tripDestination">Destination</label>
+          <input type="text" id="tripDestination" required placeholder="e.g. Similan Islands, Thailand">
+        </div>
+        <div class="form-row">
+          <label for="tripArea">Region</label>
+          <select id="tripArea">
+            <option>Caribbean</option>
+            <option>Red Sea</option>
+            <option>Indo-Pacific</option>
+            <option>Southeast Asia</option>
+            <option>Central America</option>
+            <option>Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-grid-2">
+        <div class="form-row">
+          <label for="tripStart">Start date</label>
+          <input type="date" id="tripStart" required>
+        </div>
+        <div class="form-row">
+          <label for="tripEnd">End date</label>
+          <input type="date" id="tripEnd" required>
+        </div>
+      </div>
+      <div class="form-row">
+        <label for="tripSpots">Spots still open (optional)</label>
+        <input type="number" id="tripSpots" min="0" placeholder="e.g. 4">
+      </div>
+      <div class="form-row">
+        <label for="tripDesc">Description</label>
+        <textarea id="tripDesc" required placeholder="What's the plan? Boat, shore-based, certification level needed, cost split..."></textarea>
+      </div>
+      <button type="submit" class="btn btn-reef modal-submit">Submit</button>
+    </form>
+  </div>
+</div>
+
+<script>
+/* ---------------- DATA ---------------- */
+const GRADIENTS = [
+  'linear-gradient(135deg,#0E4A5C,#1F8A70)',
+  'linear-gradient(135deg,#123449,#2FAE8F)',
+  'linear-gradient(135deg,#0A2E3D,#D9A66C)',
+  'linear-gradient(135deg,#0E3A4A,#7FB8D9)',
+  'linear-gradient(135deg,#1B4A63,#E1633F)',
+  'linear-gradient(135deg,#0A1929,#1F8A70)'
+];
+
+const SEED_LISTINGS = [
+  {id:'si-1', title:'Dock house on the house reef', location:'Bonaire, Dutch Caribbean', region:'Caribbean', site:'Salt Pier', viz:30, depth:24, price:118, hostCert:'Divemaster / Pro', desc:'Shore-entry dive house two minutes from Salt Pier. Wake up, walk in — no boat needed most mornings.', amenities:['Tank storage','Rinse station','Shore entry','Gear drying room'], fees:[{label:'Cleaning fee', amount:20},{label:'Tank-fill fee', amount:8}]},
+  {id:'si-2', title:'Room above the compressor shed', location:'Dahab, Egypt', region:'Red Sea', site:'Blue Hole', viz:25, depth:40, price:64, hostCert:'Rescue', desc:'Simple room attached to a family-run fill station. Quiet during the week, full of stories on weekends.', amenities:['Compressor access','Tank storage','Rinse station'], fees:[{label:'Cleaning fee', amount:10},{label:'Tank-fill fee', amount:6}]},
+  {id:'si-3', title:'Stilt house over the lagoon', location:'Raja Ampat, Indonesia', region:'Indo-Pacific', site:'Cape Kri', viz:20, depth:35, price:145, hostCert:'Divemaster / Pro', desc:'Wooden stilt house with a private jetty. Boat pickup for Cape Kri and Sardine Reef arranged with neighbors.', amenities:['Boat dock','Gear drying room','Tank storage'], fees:[{label:'Cleaning fee', amount:25},{label:'Boat-dock fee', amount:15}]},
+  {id:'si-4', title:'Beach bungalow, black sand entry', location:'Tulamben, Bali', region:'Indo-Pacific', site:'USAT Liberty Wreck', viz:18, depth:30, price:52, hostCert:'Advanced', desc:'Two-minute walk to the Liberty wreck. Basic, honest, and exactly what a wreck-diving trip needs.', amenities:['Shore entry','Rinse station','Tank storage'], fees:[{label:'Cleaning fee', amount:12}]},
+  {id:'si-5', title:'Guesthouse near Coron town pier', location:'Coron, Philippines', region:'Southeast Asia', site:'Barracuda Lake', viz:22, depth:38, price:47, hostCert:'Open Water', desc:'Family guesthouse a short tricycle ride from the pier. Hosts arrange boats to the WWII wrecks.', amenities:['Tank storage','Rinse station'], fees:[{label:'Cleaning fee', amount:8}]},
+  {id:'si-6', title:'Reef-front cabana, Utila', location:'Utila, Honduras', region:'Central America', site:'Black Hills', viz:24, depth:28, price:58, hostCert:'Rescue', desc:'Hammock, cold shower, warm water — the classic Utila trade-off. Whale shark season books out fast.', amenities:['Shore entry','Boat dock','Gear drying room'], fees:[{label:'Cleaning fee', amount:12},{label:'Gear-storage fee', amount:5}]},
+  {id:'si-7', title:'Longtail-boat family home', location:'Similan Islands, Thailand', region:'Southeast Asia', site:'Richelieu Rock', viz:20, depth:32, price:73, hostCert:'Advanced', desc:'Mainland base for liveaboard-adjacent day trips out to Richelieu Rock. Great for surface interval naps.', amenities:['Boat dock','Tank storage','Compressor access'], fees:[{label:'Cleaning fee', amount:15},{label:'Tank-fill fee', amount:7}]},
+  {id:'si-8', title:'Converted boathouse, north shore', location:'Cozumel, Mexico', region:'Caribbean', site:'Palancar Reef', viz:28, depth:26, price:96, hostCert:'Divemaster / Pro', desc:'Actual boathouse, actually on the water. Drift-dive drop-offs arranged with the dive shop next door.', amenities:['Boat dock','Rinse station','Tank storage','Gear drying room'], fees:[{label:'Cleaning fee', amount:18},{label:'Boat-dock fee', amount:12}]},
+];
+
+const SEED_THREADS = [
+  {id:'th-1', category:'Trip reports', title:'Just back from Raja Ampat — worth the flights', author:'Marco T.', authorCert:'Divemaster / Pro', createdAt:'2026-08-10T10:00:00Z',
+    posts:[
+      {author:'Marco T.', authorCert:'Divemaster / Pro', body:"Ten days, six dive sites, one seasick day. Cape Kri lived up to the hype — biggest fish count I've ever seen on a single dive. Viz was patchy first few days then opened right up.", createdAt:'2026-08-10T10:00:00Z'},
+      {author:'Priya N.', authorCert:'Advanced', body:'How was the current at Cape Kri? Debating if I need more dives under my belt first.', createdAt:'2026-08-10T14:20:00Z'},
+      {author:'Marco T.', authorCert:'Divemaster / Pro', body:'Manageable if you stay close to the reef hook. Advanced is fine, just brief with your guide.', createdAt:'2026-08-11T08:05:00Z'},
+    ]},
+  {id:'th-2', category:'Gear talk', title:'Backplate and wing vs. jacket BCD for warm water travel', author:'Dana K.', authorCert:'Rescue', createdAt:'2026-08-08T09:00:00Z',
+    posts:[
+      {author:'Dana K.', authorCert:'Rescue', body:"Switching from a jacket BCD and wondering if backplate/wing is worth it for mostly warm-water reef diving, not much technical stuff.", createdAt:'2026-08-08T09:00:00Z'},
+      {author:'Owen R.', authorCert:'Divemaster / Pro', body:'Packs smaller for travel, that alone sold me. Trim takes a few dives to dial in though.', createdAt:'2026-08-08T11:40:00Z'},
+    ]},
+  {id:'th-3', category:'Buddy requests', title:'Solo traveling to Dahab in October, looking for a buddy', author:'Yuki S.', authorCert:'Advanced', createdAt:'2026-08-05T16:00:00Z',
+    posts:[
+      {author:'Yuki S.', authorCert:'Advanced', body:"First solo dive trip and would rather not dive completely alone the whole time. Anyone else around Dahab in October?", createdAt:'2026-08-05T16:00:00Z'},
+    ]},
+  {id:'th-4', category:'Safety & training', title:'Reminder: check your O-ring before every single dive', author:'Rescue Randy', authorCert:'Divemaster / Pro', createdAt:'2026-08-01T12:00:00Z',
+    posts:[
+      {author:'Rescue Randy', authorCert:'Divemaster / Pro', body:'Had a slow leak start on dive 3 of the day because I skipped the check after a quick tank swap. No drama, just a shorter dive — but a good reminder it takes ten seconds.', createdAt:'2026-08-01T12:00:00Z'},
+    ]},
+];
+
+const SEED_SITES = [
+  {id:'ds-1', status:'approved', name:'Cape Kri', location:'Raja Ampat, Indonesia', area:'Indo-Pacific', level:'Advanced', desc:'Famous for the highest fish count ever recorded on a single dive. Strong currents, reef hooks recommended.',
+    experiences:[
+      {author:'Marco T.', body:'Best drift dive of my life. Went through 4 times in one week and it was different every time.', media:null, createdAt:'2026-08-10T10:00:00Z'},
+    ]},
+  {id:'ds-2', status:'approved', name:'Blue Hole', location:'Dahab, Egypt', area:'Red Sea', level:'Open Water (shallow) / Tec (deep)', desc:'Iconic sinkhole reachable from shore. The shallow saddle is easy; the deeper "Arch" has claimed lives — stay within your training.',
+    experiences:[
+      {author:'Yuki S.', body:'Did the shallow reef side only, gorgeous coral garden right at the entry. Skipped the arch, not trained for it and glad I didn\'t feel pressured to.', media:null, createdAt:'2026-07-22T09:00:00Z'},
+    ]},
+  {id:'ds-3', status:'approved', name:'Salt Pier', location:'Bonaire, Dutch Caribbean', area:'Caribbean', level:'Open Water', desc:'Shore-entry site under an active salt-loading pier. Check with the harbor before diving — closed when ships are docked.',
+    experiences:[]},
+  {id:'ds-4', status:'approved', name:'USAT Liberty Wreck', location:'Tulamben, Bali', area:'Indo-Pacific', level:'Open Water', desc:'A WWII cargo ship a few meters from the beach, now covered in coral. Great for both new wreck divers and photographers.',
+    experiences:[
+      {author:'Dana K.', body:'Did a night dive here and it was a completely different site — mandarin fish came out right at dusk.', media:null, createdAt:'2026-06-30T20:00:00Z'},
+    ]},
+  {id:'ds-5', status:'approved', name:'Richelieu Rock', location:'Similan Islands, Thailand', area:'Southeast Asia', level:'Advanced', desc:'A submerged pinnacle famous for whale shark sightings, best visited by liveaboard or an early boat from the mainland.',
+    experiences:[]},
+];
+
+const SEED_TRIPS = [
+  {id:'trip-1', status:'approved', title:'Liveaboard week in the Similans', destination:'Similan Islands, Thailand', area:'Southeast Asia', startDate:'2026-11-14', endDate:'2026-11-21', spots:3, organizer:'Priya N.', desc:'Booked a 7-night liveaboard, three spots still open. Whale shark season, Richelieu Rock included.'},
+  {id:'trip-2', status:'approved', title:'Ten days in Raja Ampat', destination:'Raja Ampat, Indonesia', area:'Indo-Pacific', startDate:'2027-02-02', endDate:'2027-02-12', spots:2, organizer:'Marco T.', desc:'Land-based, staying at a homestay near Cape Kri. Advanced cert recommended for the currents.'},
+  {id:'trip-3', status:'approved', title:'Red Sea wreck week', destination:'Dahab, Egypt', area:'Red Sea', startDate:'2026-10-05', endDate:'2026-10-12', spots:5, organizer:'Yuki S.', desc:'Casual group trip based out of Dahab, day boats to the Thistlegorm and Blue Hole. All levels welcome.'},
+];
+
+const SEED_SHOPS = [
+  {id:'shop-1', status:'approved', name:'Buddy Dive Bonaire', location:'Bonaire, Dutch Caribbean', area:'Caribbean', services:['Tank fills','Gear rental','Nitrox','Courses'], note:'Unlimited shore diving with a truck rental — pretty much the standard Bonaire setup.', addedBy:'Marco T.'},
+  {id:'shop-2', status:'approved', name:'Big Blue Dahab', location:'Dahab, Egypt', area:'Red Sea', services:['Tank fills','Boat charters','Courses'], note:'Good instructors, patient with nervous first-timers at the Blue Hole.', addedBy:'Yuki S.'},
+  {id:'shop-3', status:'approved', name:'Papua Explorers', location:'Raja Ampat, Indonesia', area:'Indo-Pacific', services:['Boat charters','Gear rental','Nitrox'], note:'Runs the boats out to Cape Kri, knows the current schedule by heart.', addedBy:'Marco T.'},
+  {id:'shop-4', status:'approved', name:'Utila Dive Centre', location:'Utila, Honduras', area:'Central America', services:['Tank fills','Courses','Repairs'], note:'Reasonably priced whale shark trips, honest about when sightings are unlikely.', addedBy:'Dana K.'},
+];
+
+let listings = [];
+let member = null; // the current browser's applicant record: {id,name,email,...,status}
+
+/* ---------------- STORAGE HELPERS ----------------
+   These now talk to the real backend (Vercel serverless functions +
+   Supabase) instead of the browser-only window.storage used in the
+   preview version. Every function below keeps the exact same name and
+   signature as before, so none of the ~30 call sites elsewhere in this
+   file needed to change — only what happens inside them did. */
+
+const KEY_TO_COLLECTION = {
+  si_listings_v1: 'listings',
+  si_threads_v1: 'threads',
+  si_sites_v1: 'sites',
+  si_trips_v1: 'trips',
+  si_shops_v1: 'shops',
+  si_bookings_v1: 'bookings',
+  si_messages_v1: 'messages',
+  si_applications_v1: 'applications',
+};
+
+// Remembers the last known state of each collection so safeSet can figure
+// out what actually changed (create / update / delete) instead of having
+// to blindly rewrite everything on every save.
+const _remoteCache = {};
+
+async function apiList(collection){
+  const res = await fetch('/api/' + collection, {
+    headers: { 'X-Admin-Key': getAdminKey() }
+  });
+  if(res.status === 401){ sessionStorage.removeItem('si_admin_key'); throw new Error('ADMIN_AUTH_REQUIRED'); }
+  if(!res.ok) throw new Error('Failed to load ' + collection);
+  return await res.json();
+}
+async function apiCreate(collection, item){
+  const res = await fetch('/api/' + collection, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(item),
+  });
+  if(!res.ok) throw new Error('Failed to create in ' + collection);
+  return await res.json();
+}
+function getAdminKey(){
+  return sessionStorage.getItem('si_admin_key') || '';
+}
+
+async function apiUpdate(collection, id, patch){
+  const res = await fetch('/api/' + collection + '/' + encodeURIComponent(id), {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', 'X-Admin-Key': getAdminKey() },
+    body: JSON.stringify(patch),
+  });
+  if(res.status === 401){ sessionStorage.removeItem('si_admin_key'); throw new Error('ADMIN_AUTH_REQUIRED'); }
+  if(!res.ok) throw new Error('Failed to update in ' + collection);
+  return await res.json();
+}
+async function apiDelete(collection, id){
+  const res = await fetch('/api/' + collection + '/' + encodeURIComponent(id), {
+    method: 'DELETE',
+    headers: { 'X-Admin-Key': getAdminKey() },
+  });
+  if(res.status === 401){ sessionStorage.removeItem('si_admin_key'); throw new Error('ADMIN_AUTH_REQUIRED'); }
+  if(!res.ok) throw new Error('Failed to delete from ' + collection);
+  return await res.json();
+}
+
+async function safeGet(key, shared){
+  const collection = KEY_TO_COLLECTION[key];
+  if(!collection) return null;
+  try{
+    const arr = await apiList(collection);
+    _remoteCache[key] = arr;
+    return JSON.stringify(arr);
+  }catch(e){
+    if(e.message === 'ADMIN_AUTH_REQUIRED'){
+      showToast('Incorrect admin password — please sign in again');
+      promptAdminPassword();
+    } else {
+      console.error('API load error', e);
+    }
+    return null;
+  }
+}
+
+async function safeSet(key, value, shared){
+  const collection = KEY_TO_COLLECTION[key];
+  if(!collection) return false;
+  let newArray;
+  try{ newArray = JSON.parse(value); }catch(e){ return false; }
+
+  const oldArray = _remoteCache[key] || [];
+  const oldById = new Map(oldArray.map(x => [x.id, x]));
+  const newById = new Map(newArray.map(x => [x.id, x]));
+
+  try{
+    for(const item of newArray){
+      const prev = oldById.get(item.id);
+      if(!prev){
+        await apiCreate(collection, item);
+      } else if(JSON.stringify(prev) !== JSON.stringify(item)){
+        await apiUpdate(collection, item.id, { ...item });
+      }
+    }
+    for(const item of oldArray){
+      if(!newById.has(item.id)){
+        await apiDelete(collection, item.id);
+      }
+    }
+    _remoteCache[key] = newArray;
+    return true;
+  }catch(e){
+    if(e.message === 'ADMIN_AUTH_REQUIRED'){
+      showToast('Incorrect admin password — please sign in again');
+      promptAdminPassword();
+    } else {
+      console.error('API save error', e);
+    }
+    return false;
+  }
+}
+
+async function loadApplications(){
+  const raw = await safeGet('si_applications_v1', true);
+  if(!raw) return [];
+  try{ return JSON.parse(raw); }catch(e){ return []; }
+}
+async function saveApplications(apps){
+  await safeSet('si_applications_v1', JSON.stringify(apps), true);
+}
+
+// Lets a member check their own application status without needing the
+// admin password — fetches just their one record, not the full list.
+async function fetchMyApplication(email){
+  try{
+    const res = await fetch('/api/applications?email=' + encodeURIComponent(email));
+    if(!res.ok) return null;
+    const arr = await res.json();
+    return arr[0] || null;
+  }catch(e){
+    console.error('Failed to check application status', e);
+    return null;
+  }
+}
+
+/* ---------------- INIT ---------------- */
+let threads = [];
+let sites = [];
+let trips = [];
+let shops = [];
+
+async function loadCollection(key, seed){
+  const raw = await safeGet(key, true);
+  if(raw){
+    try{ return JSON.parse(raw); }catch(e){ return seed.slice(); }
+  }
+  const data = seed.slice();
+  await safeSet(key, JSON.stringify(data), true);
+  return data;
+}
+
+async function init(){
+  const stored = await safeGet('si_listings_v1', true);
+  if(stored){
+    try{ listings = JSON.parse(stored); }catch(e){ listings = SEED_LISTINGS.slice(); }
+  } else {
+    listings = SEED_LISTINGS.slice();
+    await safeSet('si_listings_v1', JSON.stringify(listings), true);
+  }
+  renderGrid();
+
+  threads = await loadCollection('si_threads_v1', SEED_THREADS);
+  sites = await loadCollection('si_sites_v1', SEED_SITES);
+  trips = await loadCollection('si_trips_v1', SEED_TRIPS);
+  shops = await loadCollection('si_shops_v1', SEED_SHOPS);
+  renderThreadList();
+  renderSiteGrid();
+  renderTripGrid();
+  renderShopGrid();
+
+  // Reconnect this browser to its application, if it applied before
+  const myEmail = sessionStorage.getItem('si_my_email');
+  if(myEmail){
+    const mine = await fetchMyApplication(myEmail);
+    if(mine){ member = mine; applyMemberUI(); }
+  }
+
+  document.getElementById('adminLink').addEventListener('click', async (e)=>{
+    e.preventDefault();
+    if(sessionStorage.getItem('si_admin_key')){
+      switchAdminTab('membership');
+      openModal('adminOverlay');
+    } else {
+      promptAdminPassword();
+    }
+  });
+
+  document.getElementById('adminAuthForm').addEventListener('submit', (e)=>{
+    e.preventDefault();
+    const pw = document.getElementById('adminPasswordInput').value;
+    sessionStorage.setItem('si_admin_key', pw);
+    document.getElementById('adminAuthForm').reset();
+    closeModal('adminAuthOverlay');
+    switchAdminTab('membership');
+    openModal('adminOverlay');
+    // We don't know yet if the password is actually correct — that's only
+    // confirmed server-side on the first real admin action. If it's wrong,
+    // that action will fail and prompt again automatically.
+  });
+
+  document.getElementById('joinCertPhoto').addEventListener('change', (e)=>{
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = ()=>{
+      document.getElementById('certPreview').src = reader.result;
+      document.getElementById('certPreviewWrap').style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  });
+
+  document.getElementById('lPhoto').addEventListener('change', (e)=>{
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = ()=>{
+      document.getElementById('lPhotoPreview').src = reader.result;
+      document.getElementById('lPhotoPreviewWrap').style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  });
+
+  // Tab switching
+  document.querySelectorAll('.tab-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+      window.scrollTo({top:0, behavior:'smooth'});
+    });
+  });
+
+  document.getElementById('newThreadBtn').addEventListener('click', ()=>{
+    if(!requireApproved('post a thread')) return;
+    openModal('newThreadOverlay');
+  });
+  document.getElementById('newShopBtn').addEventListener('click', ()=>{
+    if(!requireApproved('add a dive shop')) return;
+    editingShopId = null;
+    document.getElementById('newShopForm').reset();
+    document.querySelector('#newShopOverlay h3').textContent = 'Add a dive shop';
+    openModal('newShopOverlay');
+  });
+  document.getElementById('newSiteBtn').addEventListener('click', ()=>{
+    if(!requireApproved('suggest a dive site')) return;
+    editingSiteId = null;
+    document.getElementById('newSiteForm').reset();
+    document.querySelector('#newSiteOverlay h3').textContent = 'Suggest a dive site';
+    openModal('newSiteOverlay');
+  });
+}
+init();
+
+/* ---------------- MOBILE NAV ---------------- */
+const navHamburger = document.getElementById('navHamburger');
+const navLinks = document.getElementById('navLinks');
+navHamburger.addEventListener('click', ()=>{
+  const isOpen = navLinks.classList.toggle('mobile-open');
+  navHamburger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+});
+// Close the mobile menu after tapping any link/button inside it, so it
+// doesn't stay open covering the page after navigating.
+navLinks.addEventListener('click', (e)=>{
+  if(e.target.closest('a, button')){
+    navLinks.classList.remove('mobile-open');
+    navHamburger.setAttribute('aria-expanded', 'false');
+  }
+});
+
+/* Gate content-creation actions behind an approved membership */
+function requireApproved(actionLabel){
+  if(!member){
+    showToast('Join and verify your certification to ' + actionLabel);
+    openModal('joinOverlay');
+    return false;
+  }
+  if(member.status !== 'approved'){
+    showToast('Your membership is still pending review — you can ' + actionLabel + ' once approved');
+    return false;
+  }
+  return true;
+}
+
+function timeAgo(iso){
+  const diff = Date.now() - new Date(iso).getTime();
+  const days = Math.floor(diff / 86400000);
+  if(days <= 0) return 'today';
+  if(days === 1) return '1 day ago';
+  if(days < 30) return days + ' days ago';
+  const months = Math.floor(days / 30);
+  return months + (months === 1 ? ' month ago' : ' months ago');
+}
+
+/* ---------------- FORUM ---------------- */
+function renderThreadList(){
+  const el = document.getElementById('threadList');
+  if(threads.length === 0){
+    el.innerHTML = '<p style="color:#5B6B65;font-size:14px;">No threads yet — be the first to post.</p>';
+    return;
+  }
+  const sorted = threads.slice().sort((a,b)=> new Date(b.posts[b.posts.length-1].createdAt) - new Date(a.posts[a.posts.length-1].createdAt));
+  el.innerHTML = sorted.map(t=>{
+    const last = t.posts[t.posts.length-1];
+    return `
+    <div class="thread-row" onclick="openThread('${t.id}')">
+      <div style="min-width:0;">
+        <span class="thread-cat">${escapeHtml(t.category)}</span>
+        <p class="thread-title">${escapeHtml(t.title)}</p>
+        <p class="thread-meta">Started by ${escapeHtml(t.author)} · ${escapeHtml(t.authorCert)}</p>
+      </div>
+      <div class="thread-stats">
+        <div>${t.posts.length} ${t.posts.length===1?'post':'posts'}</div>
+        <div>last reply ${timeAgo(last.createdAt)}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openThread(id){
+  const t = threads.find(x=>x.id===id);
+  if(!t) return;
+  const body = document.getElementById('threadModalBody');
+  body.innerHTML = `
+    <button class="modal-close" onclick="closeModal('threadOverlay')">✕</button>
+    <span class="thread-cat">${escapeHtml(t.category)}</span>
+    <h3 style="margin-top:8px;">${escapeHtml(t.title)}</h3>
+    <div id="threadPosts">
+      ${t.posts.map(p=>`
+        <div class="post-row">
+          <span class="post-author">${escapeHtml(p.author)}</span>
+          <span class="thread-cat" style="background:none;color:#8A9691;padding:0;">${escapeHtml(p.authorCert)}</span>
+          <span class="post-time">${timeAgo(p.createdAt)}</span>
+          <p class="post-body">${escapeHtml(p.body)}</p>
+        </div>
+      `).join('')}
+    </div>
+    <div class="form-row" style="margin-top:18px;">
+      <label for="replyBody">Reply</label>
+      <textarea id="replyBody" placeholder="Add to the conversation..."></textarea>
+    </div>
+    <button class="btn btn-reef modal-submit" onclick="postReply('${t.id}')">Post reply</button>
+  `;
+  openModal('threadOverlay');
+}
+
+async function postReply(threadId){
+  if(!requireApproved('reply')) return;
+  const textEl = document.getElementById('replyBody');
+  const body = textEl.value.trim();
+  if(!body){ showToast('Write something first'); return; }
+
+  const t = threads.find(x=>x.id===threadId);
+  t.posts.push({author: member.name, authorCert: member.cert, body, createdAt: new Date().toISOString()});
+  await safeSet('si_threads_v1', JSON.stringify(threads), true);
+  openThread(threadId);
+  renderThreadList();
+  showToast('Reply posted');
+}
+
+document.getElementById('newThreadForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  if(!requireApproved('post a thread')) return;
+  const category = document.getElementById('threadCategory').value;
+  const title = document.getElementById('threadTitle').value;
+  const bodyText = document.getElementById('threadBody').value;
+
+  const thread = {
+    id:'th-'+Date.now(), category, title, author: member.name, authorCert: member.cert, createdAt: new Date().toISOString(),
+    posts:[{author: member.name, authorCert: member.cert, body: bodyText, createdAt: new Date().toISOString()}]
+  };
+  threads.unshift(thread);
+  await safeSet('si_threads_v1', JSON.stringify(threads), true);
+  renderThreadList();
+  closeModal('newThreadOverlay');
+  e.target.reset();
+  showToast('Thread posted');
+});
+
+/* ---------------- DIVE SITES ---------------- */
+const REGION_ORDER = ['Caribbean','Red Sea','Indo-Pacific','Southeast Asia','Central America','Other'];
+
+function groupByArea(items){
+  const groups = {};
+  items.forEach(item=>{
+    const area = item.area || 'Other';
+    if(!groups[area]) groups[area] = [];
+    groups[area].push(item);
+  });
+  return REGION_ORDER
+    .filter(r => groups[r] && groups[r].length)
+    .map(r => ({ area: r, items: groups[r] }));
+}
+
+function renderSiteGrid(){
+  const el = document.getElementById('siteGrid');
+  const grouped = groupByArea(sites.filter(s => s.status === 'approved'));
+  if(grouped.length === 0){
+    el.innerHTML = '<p style="color:#5B6B65;font-size:14px;">No dive sites yet.</p>';
+    return;
+  }
+  el.innerHTML = grouped.map(g => `
+    <div style="grid-column:1/-1;">
+      <h3 style="font-size:19px;margin:20px 0 14px;padding-top:8px;border-top:1px solid rgba(11,22,32,0.08);">${escapeHtml(g.area)}</h3>
+      <div class="grid">
+        ${g.items.map(s=>`
+          <div class="site-card" onclick="openSite('${s.id}')">
+            <div class="site-photo" style="background:${gradientFor(s.id)};">
+              <span class="loc-tag">${s.experiences.length} ${s.experiences.length===1?'account':'accounts'}</span>
+            </div>
+            <div class="card-body">
+              <p class="card-title">${escapeHtml(s.name)}</p>
+              <p class="card-sub">${escapeHtml(s.location)} · ${escapeHtml(s.level)}</p>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function openSite(id){
+  const s = sites.find(x=>x.id===id);
+  if(!s) return;
+  const body = document.getElementById('siteModalBody');
+  body.innerHTML = `
+    <button class="modal-close" onclick="closeModal('siteOverlay')">✕</button>
+    <div class="detail-hero" style="background:${gradientFor(s.id)};">
+      <span class="loc-tag" style="position:relative;">${s.area} · ${s.location}</span>
+    </div>
+    <h3>${escapeHtml(s.name)}</h3>
+    <p class="sub">${escapeHtml(s.level)}</p>
+    <p class="detail-desc">${escapeHtml(s.desc)}</p>
+    <h4 style="font-size:15px;margin:22px 0 4px;">Member experiences</h4>
+    <div id="siteExperiences">
+      ${s.experiences.length === 0 ? '<p style="color:#5B6B65;font-size:13.5px;">No experiences shared yet — be the first.</p>' :
+        s.experiences.map(ex=>`
+          <div class="experience-card">
+            <span class="post-author">${escapeHtml(ex.author)}</span>
+            <span class="post-time">${timeAgo(ex.createdAt)}</span>
+            <p class="post-body">${escapeHtml(ex.body)}</p>
+            ${ex.media && ex.mediaType === 'photo' ? `<img class="experience-media" src="${ex.media}">` : ''}
+            ${ex.media && ex.mediaType === 'video' ? `<a href="${ex.media}" target="_blank" rel="noopener" style="font-size:13px;color:var(--reef);">Watch video ↗</a>` : ''}
+          </div>
+        `).join('')}
+    </div>
+    <div class="form-row" style="margin-top:18px;">
+      <label for="expBody">Share your experience</label>
+      <textarea id="expBody" placeholder="Conditions, wildlife, how to get there — whatever's useful to another diver."></textarea>
+    </div>
+    <div class="form-row">
+      <label for="expPhoto">Add a photo (optional)</label>
+      <input type="file" id="expPhoto" accept="image/*">
+    </div>
+    <button class="btn btn-reef modal-submit" onclick="postExperience('${s.id}')">Post experience</button>
+  `;
+  openModal('siteOverlay');
+}
+
+async function postExperience(siteId){
+  if(!requireApproved('share an experience')) return;
+  const bodyText = document.getElementById('expBody').value.trim();
+  if(!bodyText){ showToast('Write something first'); return; }
+  const photoFile = document.getElementById('expPhoto').files[0];
+
+  let media = null, mediaType = null;
+  if(photoFile){
+    media = await new Promise(resolve=>{
+      const reader = new FileReader();
+      reader.onload = ()=> resolve(reader.result);
+      reader.readAsDataURL(photoFile);
+    });
+    mediaType = 'photo';
+  }
+
+  const s = sites.find(x=>x.id===siteId);
+  s.experiences.unshift({author: member.name, body: bodyText, media, mediaType, createdAt: new Date().toISOString()});
+  await safeSet('si_sites_v1', JSON.stringify(sites), true);
+  openSite(siteId);
+  renderSiteGrid();
+  showToast('Experience posted');
+}
+
+/* ---------------- DIVE TRIPS ---------------- */
+function formatTripDates(start, end){
+  try{
+    const opts = { month: 'short', day: 'numeric' };
+    const s = new Date(start + 'T00:00:00').toLocaleDateString(undefined, opts);
+    const e = new Date(end + 'T00:00:00').toLocaleDateString(undefined, opts);
+    return s + ' – ' + e;
+  }catch(err){ return start + ' – ' + end; }
+}
+
+function renderTripGrid(){
+  const el = document.getElementById('tripGrid');
+  const approved = trips.filter(t => t.status === 'approved')
+    .slice().sort((a,b)=> new Date(a.startDate) - new Date(b.startDate));
+  if(approved.length === 0){
+    el.innerHTML = '<p style="color:#5B6B65;font-size:14px;">No trips posted yet — be the first to propose one.</p>';
+    return;
+  }
+  el.innerHTML = approved.map(t => `
+    <div class="card" style="cursor:default;">
+      <div class="card-photo" style="background:${gradientFor(t.id)};">
+        <span class="loc-tag">${escapeHtml(t.area)}</span>
+      </div>
+      <div class="card-body">
+        <p class="card-title">${escapeHtml(t.title)}</p>
+        <p class="card-sub">${escapeHtml(t.destination)} · ${formatTripDates(t.startDate, t.endDate)}</p>
+        <p style="font-size:13.5px;color:#354340;line-height:1.6;margin:0 0 12px;">${escapeHtml(t.desc)}</p>
+        <div class="card-foot" style="border-top:none;padding-top:0;">
+          <span style="font-size:12px;color:#5B6B65;">Organized by ${escapeHtml(t.organizer)}</span>
+          ${t.spots ? `<span class="host-badge">${t.spots} spot${t.spots===1?'':'s'} open</span>` : ''}
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+let editingTripId = null;
+
+document.getElementById('newTripBtn').addEventListener('click', ()=>{
+  if(!requireApproved('propose a trip')) return;
+  editingTripId = null;
+  document.getElementById('newTripForm').reset();
+  document.querySelector('#newTripOverlay h3').textContent = 'Propose a trip';
+  openModal('newTripOverlay');
+});
+
+document.getElementById('newTripForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  if(!editingTripId && !requireApproved('propose a trip')) return;
+  const startDate = document.getElementById('tripStart').value;
+  const endDate = document.getElementById('tripEnd').value;
+  if(endDate < startDate){ showToast('End date must be after start date'); return; }
+
+  const fields = {
+    title: document.getElementById('tripTitle').value,
+    destination: document.getElementById('tripDestination').value,
+    area: document.getElementById('tripArea').value,
+    startDate, endDate,
+    spots: Number(document.getElementById('tripSpots').value) || 0,
+    desc: document.getElementById('tripDesc').value,
+  };
+
+  if(editingTripId){
+    const existing = trips.find(t => t.id === editingTripId);
+    Object.assign(existing, fields);
+    showToast('Trip updated');
+    editingTripId = null;
+  } else {
+    trips.unshift({ id:'trip-'+Date.now(), ...fields, organizer: member.name, status:'pending' });
+    showToast('Trip submitted — pending review before it\'s listed');
+  }
+
+  await safeSet('si_trips_v1', JSON.stringify(trips), true);
+  renderTripGrid();
+  closeModal('newTripOverlay');
+  e.target.reset();
+});
+
+/* ---------------- DIVE SHOPS ---------------- */
+function renderShopGrid(){
+  const el = document.getElementById('shopGrid');
+  const grouped = groupByArea(shops.filter(s => s.status === 'approved'));
+  if(grouped.length === 0){
+    el.innerHTML = '<p style="color:#5B6B65;font-size:14px;">No dive shops yet.</p>';
+    return;
+  }
+  el.innerHTML = grouped.map(g => `
+    <div style="grid-column:1/-1;">
+      <h3 style="font-size:19px;margin:20px 0 14px;padding-top:8px;border-top:1px solid rgba(11,22,32,0.08);">${escapeHtml(g.area)}</h3>
+      <div class="grid">
+        ${g.items.map(sh=>`
+          <div class="shop-card">
+            <p class="card-title" style="font-size:16px;">${escapeHtml(sh.name)}</p>
+            <p class="card-sub" style="margin-bottom:0;">${escapeHtml(sh.location)}</p>
+            <div class="shop-services">
+              ${sh.services.map(s=>`<span class="amenity">${escapeHtml(s)}</span>`).join('')}
+            </div>
+            <p style="font-size:13.5px;color:#354340;line-height:1.6;margin:6px 0 0;">${escapeHtml(sh.note)}</p>
+            <p style="font-size:11.5px;color:#8A9691;margin:4px 0 0;">Added by ${escapeHtml(sh.addedBy)}</p>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+let editingShopId = null;
+
+document.getElementById('newShopForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  if(!editingShopId && !requireApproved('add a dive shop')) return;
+  const services = Array.from(document.querySelectorAll('.shop-service-check:checked')).map(c=>c.value);
+  const fields = {
+    name: document.getElementById('shopName').value,
+    location: document.getElementById('shopLocation').value,
+    area: document.getElementById('shopArea').value,
+    services: services.length ? services : ['General'],
+    note: document.getElementById('shopNote').value,
+  };
+
+  if(editingShopId){
+    const existing = shops.find(s => s.id === editingShopId);
+    Object.assign(existing, fields);
+    showToast('Shop updated');
+    editingShopId = null;
+  } else {
+    shops.unshift({ id:'shop-'+Date.now(), ...fields, addedBy: member.name, status:'pending' });
+    showToast('Shop submitted — pending review before it\'s listed');
+  }
+
+  await safeSet('si_shops_v1', JSON.stringify(shops), true);
+  renderShopGrid();
+  closeModal('newShopOverlay');
+  e.target.reset();
+});
+
+let editingSiteId = null;
+
+document.getElementById('newSiteForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  if(!editingSiteId && !requireApproved('suggest a dive site')) return;
+  const fields = {
+    name: document.getElementById('siteName').value,
+    location: document.getElementById('siteLocation').value,
+    area: document.getElementById('siteArea').value,
+    level: document.getElementById('siteLevel').value,
+    desc: document.getElementById('siteDesc').value,
+  };
+
+  if(editingSiteId){
+    const existing = sites.find(s => s.id === editingSiteId);
+    Object.assign(existing, fields);
+    showToast('Dive site updated');
+    editingSiteId = null;
+  } else {
+    sites.unshift({ id:'ds-'+Date.now(), ...fields, experiences:[], suggestedBy: member.name, status:'pending' });
+    showToast('Dive site submitted — pending review before it\'s listed');
+  }
+
+  await safeSet('si_sites_v1', JSON.stringify(sites), true);
+  renderSiteGrid();
+  closeModal('newSiteOverlay');
+  e.target.reset();
+});
+
+
+/* ---------------- RENDER ---------------- */
+function gradientFor(id){
+  let hash = 0;
+  for(let i=0;i<id.length;i++) hash = (hash + id.charCodeAt(i)*13) % GRADIENTS.length;
+  return GRADIENTS[hash];
+}
+
+function certDotColor(cert){
+  if(cert === 'Open Water') return '#7FB8D9';
+  if(cert === 'Advanced') return '#2FAE8F';
+  if(cert === 'Rescue') return '#D9A66C';
+  return '#E1633F';
+}
+
+function renderGrid(){
+  const region = document.getElementById('regionFilter').value;
+  const sort = document.getElementById('sortFilter').value;
+  const q = document.getElementById('searchInput').value.trim().toLowerCase();
+
+  let items = listings.filter(l=>{
+    const matchesRegion = !region || l.region === region;
+    const matchesQuery = !q || (l.location+' '+l.site+' '+l.title).toLowerCase().includes(q);
+    return matchesRegion && matchesQuery;
+  });
+
+  if(sort === 'price-asc') items = items.slice().sort((a,b)=>a.price-b.price);
+  if(sort === 'price-desc') items = items.slice().sort((a,b)=>b.price-a.price);
+  if(sort === 'viz-desc') items = items.slice().sort((a,b)=>b.viz-a.viz);
+
+  const grid = document.getElementById('listingGrid');
+  document.getElementById('filterCount').textContent = items.length + (items.length===1 ? ' listing' : ' listings');
+
+  if(items.length === 0){
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:#5B6B65;font-size:14px;">No listings match yet. Try a different region or be the first to list here.</div>';
+    return;
+  }
+
+  grid.innerHTML = items.map(l => `
+    <div class="card" onclick="openDetail('${l.id}')">
+      <div class="card-photo" style="${l.photo ? `background-image:url('${l.photo}');background-size:cover;background-position:center;` : `background:${gradientFor(l.id)};`}">
+        <span class="loc-tag">${l.region}</span>
+      </div>
+      <div class="card-body">
+        <p class="card-title">${escapeHtml(l.title)}</p>
+        <p class="card-sub">${escapeHtml(l.location)} · near ${escapeHtml(l.site)}</p>
+        <div class="stat-row">
+          <div class="stat">VIZ<b>${l.viz}m</b></div>
+          <div class="stat">MAX DEPTH<b>${l.depth}m</b></div>
+        </div>
+        <div class="card-foot">
+          <div class="price">$${l.price}<span> / night</span></div>
+          <div class="host-badge"><span class="dot" style="background:${certDotColor(l.hostCert)};"></span>${l.hostCert}</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function escapeHtml(str){
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+['regionFilter','sortFilter'].forEach(id=>{
+  document.getElementById(id).addEventListener('change', renderGrid);
+});
+document.getElementById('searchInput').addEventListener('input', renderGrid);
+
+/* ---------------- DETAIL MODAL ---------------- */
+function openDetail(id){
+  const l = listings.find(x=>x.id===id);
+  if(!l) return;
+  const fees = l.fees || [];
+  const feesTotal = fees.reduce((sum,f)=>sum+f.amount,0);
+  const total = l.price + feesTotal;
+  const blocked = l.blockedDates || [];
+  const body = document.getElementById('detailModalBody');
+  body.innerHTML = `
+    <button class="modal-close" onclick="closeModal('detailOverlay')">✕</button>
+    <div class="detail-hero" style="${l.photo ? `background-image:url('${l.photo}');background-size:cover;background-position:center;` : `background:${gradientFor(l.id)};`}">
+      <span class="loc-tag" style="position:relative;">${l.region}</span>
+    </div>
+    <h3>${escapeHtml(l.title)}</h3>
+    <p class="sub">${escapeHtml(l.location)} · near ${escapeHtml(l.site)}${l.hostName ? ' · hosted by ' + escapeHtml(l.hostName) : ''}</p>
+    <div class="detail-meta">
+      <div class="stat">VISIBILITY<b>${l.viz}m</b></div>
+      <div class="stat">MAX DEPTH<b>${l.depth}m</b></div>
+      <div class="stat">PRICE<b>$${l.price}/night</b></div>
+      <div class="stat">HOST<b>${l.hostCert}</b></div>
+    </div>
+    <p class="detail-desc">${escapeHtml(l.desc)}</p>
+    <div class="amenity-list">
+      ${l.amenities.map(a=>`<span class="amenity">${escapeHtml(a)}</span>`).join('')}
+    </div>
+
+    <h4 style="font-size:15px;margin:4px 0 8px;">Availability</h4>
+    ${blocked.length === 0
+      ? '<p style="font-size:13px;color:#5B6B65;margin:0 0 16px;">No blocked dates — open to book any time.</p>'
+      : `<div style="margin-bottom:16px;">${blocked.map(r=>`<span class="blocked-range" style="cursor:default;">${r.start} → ${r.end}</span>`).join('')}</div>`
+    }
+
+    <div style="background:var(--foam-2);border-radius:10px;padding:16px 18px;margin-bottom:18px;">
+      <p style="font-size:12px;text-transform:uppercase;letter-spacing:0.08em;color:#5B6B65;margin:0 0 10px;font-family:'IBM Plex Mono',monospace;">Price for one night</p>
+      <div style="display:flex;justify-content:space-between;font-size:14px;padding:4px 0;"><span>Nightly rate</span><span>$${l.price}</span></div>
+      ${fees.map(f=>`<div style="display:flex;justify-content:space-between;font-size:14px;padding:4px 0;color:#3D4C47;"><span>${escapeHtml(f.label)}</span><span>$${f.amount}</span></div>`).join('')}
+      <div style="display:flex;justify-content:space-between;font-size:14px;padding:4px 0;color:#5B6B65;"><span>Shore Interval booking fee</span><span>$0</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:15.5px;font-weight:600;padding:10px 0 0;margin-top:6px;border-top:1px solid rgba(11,22,32,0.1);"><span>Total per night</span><span>$${total}</span></div>
+    </div>
+
+    <div class="form-grid-2">
+      <div class="form-row">
+        <label for="bookCheckin">Check-in</label>
+        <input type="date" id="bookCheckin">
+      </div>
+      <div class="form-row">
+        <label for="bookCheckout">Check-out</label>
+        <input type="date" id="bookCheckout">
+      </div>
+    </div>
+    <div class="form-row">
+      <label for="bookMessage">Note to host (optional)</label>
+      <textarea id="bookMessage" placeholder="Dive plans, arrival time, anything the host should know."></textarea>
+    </div>
+    <button class="btn btn-reef modal-submit" onclick="requestStay('${l.id}')">Request to book</button>
+
+    <h4 style="font-size:15px;margin:26px 0 8px;border-top:1px solid rgba(11,22,32,0.08);padding-top:20px;">Message the host</h4>
+    <p style="font-size:13px;color:#5B6B65;margin:0 0 10px;">Have a question before you book? Ask directly.</p>
+    <div class="form-row">
+      <textarea id="msgBody" placeholder="e.g. Is there room to store two sets of doubles?"></textarea>
+    </div>
+    <button class="btn btn-ghost" style="border-color:rgba(11,22,32,0.2);color:var(--ink);" onclick="sendHostMessage('${l.id}')">Send message</button>
+  `;
+  openModal('detailOverlay');
+}
+
+function rangesOverlap(aStart, aEnd, bStart, bEnd){
+  return aStart < bEnd && bStart < aEnd;
+}
+
+async function requestStay(id){
+  const l = listings.find(x=>x.id===id);
+  if(!l) return;
+  if(!member){
+    showToast('Join and verify your certification to request a stay');
+    closeModal('detailOverlay');
+    openModal('joinOverlay');
+    return;
+  }
+  if(member.status !== 'approved'){
+    showToast('Your membership is still pending review — you can request a stay once approved');
+    return;
+  }
+  const checkin = document.getElementById('bookCheckin').value;
+  const checkout = document.getElementById('bookCheckout').value;
+  if(!checkin || !checkout){ showToast('Pick your check-in and check-out dates'); return; }
+  if(checkout <= checkin){ showToast('Check-out must be after check-in'); return; }
+
+  const blocked = l.blockedDates || [];
+  const overlap = blocked.some(r => rangesOverlap(checkin, checkout, r.start, r.end));
+  if(overlap){ showToast('Those dates overlap with when the host has marked it unavailable'); return; }
+
+  const messageNote = document.getElementById('bookMessage').value;
+  const booking = {
+    id: 'bk-' + Date.now(),
+    listingId: l.id,
+    listingTitle: l.title,
+    hostName: l.hostName || 'Unknown host',
+    guestName: member.name,
+    guestEmail: member.email,
+    checkin, checkout,
+    message: messageNote,
+    status: 'pending',
+    createdAt: new Date().toISOString(),
+  };
+  try{
+    await apiCreate('bookings', booking);
+  }catch(e){
+    showToast('Could not send your request — please try again');
+    return;
+  }
+
+  closeModal('detailOverlay');
+  showToast('Request sent — the host will review your dates before you pay');
+}
+
+async function sendHostMessage(id){
+  const l = listings.find(x=>x.id===id);
+  if(!l) return;
+  if(!requireApproved('message a host')) return;
+  const body = document.getElementById('msgBody').value.trim();
+  if(!body){ showToast('Write a message first'); return; }
+
+  const message = {
+    id: 'msg-' + Date.now(),
+    listingId: l.id,
+    listingTitle: l.title,
+    hostName: l.hostName || 'Unknown host',
+    fromName: member.name,
+    fromEmail: member.email,
+    body,
+    createdAt: new Date().toISOString(),
+  };
+  try{
+    await apiCreate('messages', message);
+  }catch(e){
+    showToast('Could not send your message — please try again');
+    return;
+  }
+
+  document.getElementById('msgBody').value = '';
+  showToast('Message sent to the host');
+}
+
+/* ---------------- MODALS ---------------- */
+function openModal(id){ document.getElementById(id).classList.add('open'); }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+
+function promptAdminPassword(){
+  closeModal('adminOverlay');
+  openModal('adminAuthOverlay');
+}
+document.querySelectorAll('.overlay').forEach(ov=>{
+  ov.addEventListener('click', e=>{ if(e.target === ov) ov.classList.remove('open'); });
+});
+
+document.getElementById('joinNavBtn').addEventListener('click', ()=>{
+  if(member){ showToast(member.name + ' is already verified'); return; }
+  openModal('loginOverlay');
+});
+function tryOpenHostForm(){
+  if(!member){
+    showToast('Create a host account first, then list your place');
+    document.querySelector('.tab-btn[data-tab="host-signup"]').click();
+    return;
+  }
+  if(member.role !== 'host'){
+    showToast('Hosting is for host accounts — sign up as a host to list a place');
+    document.querySelector('.tab-btn[data-tab="host-signup"]').click();
+    return;
+  }
+  if(member.status !== 'approved'){ showToast('Your host account is still pending review — hosting unlocks once approved'); return; }
+  editingListingId = null;
+  document.getElementById('listForm').reset();
+  document.getElementById('lPhotoPreviewWrap').style.display = 'none';
+  document.querySelector('#listOverlay h3').textContent = 'Host application';
+  currentBlockedDates = [];
+  renderBlockedDatesList();
+  openModal('listOverlay');
+}
+document.getElementById('hostLink').addEventListener('click', (e)=>{ e.preventDefault(); tryOpenHostForm(); });
+document.getElementById('browseListBtn').addEventListener('click', tryOpenHostForm);
+
+/* ---------------- JOIN FORM ---------------- */
+document.getElementById('joinForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const file = document.getElementById('joinCertPhoto').files[0];
+  if(!file){ showToast('Please attach a photo of your cert card'); return; }
+
+  const photoDataUrl = await new Promise(resolve=>{
+    const reader = new FileReader();
+    reader.onload = ()=> resolve(reader.result);
+    reader.readAsDataURL(file);
+  });
+
+  const application = {
+    id: 'app-' + Date.now(),
+    name: document.getElementById('joinName').value,
+    email: document.getElementById('joinEmail').value,
+    agency: document.getElementById('joinAgency').value,
+    cert: document.getElementById('joinCert').value,
+    certNumber: document.getElementById('joinNumber').value,
+    photo: photoDataUrl,
+    status: 'pending',
+    appliedAt: new Date().toISOString(),
+  };
+
+  try{
+    await apiCreate('applications', application);
+  }catch(e){
+    showToast('Could not submit your application — please try again');
+    return;
+  }
+
+  member = application;
+  sessionStorage.setItem('si_my_email', member.email);
+  applyMemberUI();
+  closeModal('joinOverlay');
+  e.target.reset();
+  document.getElementById('certPreviewWrap').style.display = 'none';
+  showToast('Application submitted — pending review');
+});
+
+/* ---------------- MEMBER / HOST SIGN-UP TABS ----------------
+   Fuller, dedicated versions of the join flow above — same underlying
+   application record, but collected as its own page with a password,
+   ID photo, and profile bio, tagged with a role (member or host). */
+
+function readFileAsDataUrl(file){
+  return new Promise(resolve=>{
+    const reader = new FileReader();
+    reader.onload = ()=> resolve(reader.result);
+    reader.readAsDataURL(file);
+  });
+}
+
+function wirePhotoPreview(inputId, previewId, wrapId){
+  document.getElementById(inputId).addEventListener('change', (e)=>{
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = ()=>{
+      document.getElementById(previewId).src = reader.result;
+      document.getElementById(wrapId).style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  });
+}
+wirePhotoPreview('msCertPhoto', 'msCertPreview', 'msCertPreviewWrap');
+wirePhotoPreview('hsCertPhoto', 'hsCertPreview', 'hsCertPreviewWrap');
+
+async function submitSignup({ prefix, role, formId }){
+  const password = document.getElementById(prefix + 'Password').value;
+  const confirm = document.getElementById(prefix + 'PasswordConfirm').value;
+  if(password.length < 8){ showToast('Password must be at least 8 characters'); return; }
+  if(password !== confirm){ showToast('Passwords do not match'); return; }
+
+  const file = document.getElementById(prefix + 'CertPhoto').files[0];
+  if(!file){ showToast('Please attach a photo of your certification card'); return; }
+  const photoDataUrl = await readFileAsDataUrl(file);
+
+  const application = {
+    id: 'app-' + Date.now(),
+    role,
+    name: document.getElementById(prefix + 'Name').value,
+    email: document.getElementById(prefix + 'Email').value,
+    password,
+    agency: document.getElementById(prefix + 'Agency').value,
+    cert: document.getElementById(prefix + 'Cert').value,
+    certNumber: document.getElementById(prefix + 'CertNumber').value,
+    photo: photoDataUrl,
+    bio: document.getElementById(prefix + 'Bio').value,
+    status: 'pending',
+    appliedAt: new Date().toISOString(),
+  };
+
+  try{
+    await apiCreate('applications', application);
+  }catch(e){
+    showToast('Could not create your account — please try again');
+    return;
+  }
+
+  // Never keep the plaintext password around client-side longer than needed
+  // to send it — the server hashes it and never returns it.
+  const { password: _discard, ...safeApplication } = application;
+  member = safeApplication;
+  sessionStorage.setItem('si_my_email', member.email);
+  applyMemberUI();
+  document.getElementById(formId).reset();
+  document.getElementById(prefix + 'CertPreviewWrap').style.display = 'none';
+  showToast((role === 'host' ? 'Host account' : 'Account') + ' created — pending review');
+  document.querySelector('.tab-btn[data-tab="browse"]').click();
+}
+
+document.getElementById('memberSignupForm').addEventListener('submit', (e)=>{
+  e.preventDefault();
+  submitSignup({ prefix: 'ms', role: 'member', formId: 'memberSignupForm' });
+});
+
+document.getElementById('hostSignupForm').addEventListener('submit', (e)=>{
+  e.preventDefault();
+  submitSignup({ prefix: 'hs', role: 'host', formId: 'hostSignupForm' });
+});
+
+document.getElementById('loginForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const email = document.getElementById('loginEmail').value;
+  const password = document.getElementById('loginPassword').value;
+
+  let res;
+  try{
+    res = await fetch('/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    });
+  }catch(e){
+    showToast('Could not log in right now — please try again');
+    return;
+  }
+
+  if(!res.ok){
+    showToast('Incorrect email or password');
+    return;
+  }
+
+  member = await res.json();
+  sessionStorage.setItem('si_my_email', member.email);
+  applyMemberUI();
+  closeModal('loginOverlay');
+  document.getElementById('loginForm').reset();
+  showToast('Welcome back, ' + member.name);
+});
+
+function applyMemberUI(){
+  const pill = document.getElementById('memberPill');
+  const dot = document.getElementById('memberDot');
+  const nameEl = document.getElementById('memberName');
+  const joinBtn = document.getElementById('joinNavBtn');
+  if(!member) return;
+
+  pill.style.display = 'flex';
+  joinBtn.textContent = 'Signed in';
+
+  if(member.status === 'approved'){
+    dot.style.background = '#2FAE8F';
+    nameEl.textContent = member.name + ' · ' + member.cert + ' · Verified';
+  } else if(member.status === 'rejected'){
+    dot.style.background = '#E1633F';
+    nameEl.textContent = member.name + ' · Not approved';
+  } else {
+    dot.style.background = '#D9A66C';
+    nameEl.textContent = member.name + ' · Pending review';
+  }
+  pill.style.cursor = 'pointer';
+  pill.title = 'Click to refresh your review status';
+  pill.onclick = refreshMyStatus;
+}
+
+async function refreshMyStatus(){
+  if(!member) return;
+  const mine = await fetchMyApplication(member.email);
+  if(mine){
+    member = mine;
+    applyMemberUI();
+    showToast(member.status === 'approved' ? 'You\'re verified — booking and hosting unlocked' :
+               member.status === 'rejected' ? 'Your application was not approved' :
+               'Still pending review — check back soon');
+  }
+}
+
+/* ---------------- ADD LISTING FORM ---------------- */
+let editingListingId = null;
+let currentBlockedDates = [];
+
+function addBlockedRange(){
+  const start = document.getElementById('lBlockStart').value;
+  const end = document.getElementById('lBlockEnd').value;
+  if(!start || !end){ showToast('Pick both a start and end date'); return; }
+  if(end < start){ showToast('End date must be after start date'); return; }
+  currentBlockedDates.push({ start, end });
+  document.getElementById('lBlockStart').value = '';
+  document.getElementById('lBlockEnd').value = '';
+  renderBlockedDatesList();
+}
+
+function removeBlockedRange(idx){
+  currentBlockedDates.splice(idx, 1);
+  renderBlockedDatesList();
+}
+
+function renderBlockedDatesList(){
+  const el = document.getElementById('lBlockedDatesList');
+  if(!el) return;
+  if(currentBlockedDates.length === 0){
+    el.innerHTML = '<span style="font-size:12.5px;color:#5B6B65;">No unavailable dates set — the place is bookable any time.</span>';
+    return;
+  }
+  el.innerHTML = currentBlockedDates.map((r,i)=>
+    `<span class="blocked-range">${r.start} → ${r.end} <button type="button" onclick="removeBlockedRange(${i})">✕</button></span>`
+  ).join('');
+}
+
+
+document.getElementById('listForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  if(!editingListingId && !requireApproved('list a place')) return;
+  const checked = Array.from(document.querySelectorAll('.amenity-check:checked')).map(c=>c.value);
+  const cleaningFee = Number(document.getElementById('lCleaningFee').value) || 0;
+  const tankFee = Number(document.getElementById('lTankFee').value) || 0;
+  const fees = [];
+  if(cleaningFee > 0) fees.push({label:'Cleaning fee', amount: cleaningFee});
+  if(tankFee > 0) fees.push({label:'Tank-fill fee', amount: tankFee});
+
+  const photoFile = document.getElementById('lPhoto').files[0];
+  let photo = editingListingId ? (listings.find(l=>l.id===editingListingId) || {}).photo || null : null;
+  if(photoFile){
+    photo = await new Promise(resolve=>{
+      const reader = new FileReader();
+      reader.onload = ()=> resolve(reader.result);
+      reader.readAsDataURL(photoFile);
+    });
+  }
+
+  const fields = {
+    title: document.getElementById('lTitle').value,
+    location: document.getElementById('lLocation').value,
+    region: document.getElementById('lRegion').value,
+    site: document.getElementById('lSite').value,
+    viz: Number(document.getElementById('lViz').value),
+    depth: Number(document.getElementById('lDepth').value),
+    price: Number(document.getElementById('lPrice').value),
+    hostCert: document.getElementById('lHostCert').value,
+    desc: document.getElementById('lDesc').value,
+    amenities: checked.length ? checked : ['Tank storage'],
+    fees: fees,
+    photo: photo,
+    blockedDates: currentBlockedDates.slice(),
+  };
+
+  if(editingListingId){
+    const existing = listings.find(l => l.id === editingListingId);
+    Object.assign(existing, fields);
+    showToast('Listing updated');
+    editingListingId = null;
+  } else {
+    listings.unshift({ id: 'si-' + Date.now(), ...fields, hostName: member.name, hostEmail: member.email });
+    showToast('Listing published — visible to all members now');
+  }
+
+  await safeSet('si_listings_v1', JSON.stringify(listings), true);
+  renderGrid();
+  closeModal('listOverlay');
+  e.target.reset();
+  document.getElementById('lPhotoPreviewWrap').style.display = 'none';
+  document.getElementById('browse').scrollIntoView({behavior:'smooth'});
+});
+
+/* ---------------- ADMIN REVIEW ---------------- */
+async function renderAdminMembership(){
+  const apps = await loadApplications();
+  const el = document.getElementById('adminList');
+
+  if(apps.length === 0){
+    el.innerHTML = '<p style="color:#5B6B65;font-size:14px;">No applications yet.</p>';
+    return;
+  }
+
+  const statusColor = { pending:'#D9A66C', approved:'#2FAE8F', rejected:'#E1633F' };
+  const statusLabel = { pending:'Pending', approved:'Approved', rejected:'Rejected' };
+
+  el.innerHTML = apps.map(a => `
+    <div style="display:flex;gap:16px;padding:16px 0;border-bottom:1px solid rgba(11,22,32,0.08);align-items:flex-start;">
+      <img src="${a.photo}" style="width:96px;height:72px;object-fit:cover;border-radius:8px;border:1px solid rgba(11,22,32,0.12);flex:none;">
+      <div style="flex:1;min-width:0;">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
+          <strong style="font-size:14.5px;">${escapeHtml(a.name)}</strong>
+          <div style="display:flex;gap:6px;">
+            <span class="status-badge" style="color:#5B6B65;border:1px solid rgba(11,22,32,0.2);">${a.role === 'host' ? 'Host' : 'Member'}</span>
+            <span class="status-badge" style="color:${statusColor[a.status]};border:1px solid ${statusColor[a.status]};">${statusLabel[a.status]}</span>
+          </div>
+        </div>
+        <p style="font-size:13px;color:#5B6B65;margin:4px 0 8px;">${escapeHtml(a.email)} · ${escapeHtml(a.agency)} ${escapeHtml(a.cert)}${a.certNumber ? ' · #' + escapeHtml(a.certNumber) : ''}</p>
+        ${a.bio ? `<p style="font-size:12.5px;color:#354340;margin:0 0 8px;font-style:italic;">"${escapeHtml(a.bio)}"</p>` : ''}
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-reef" style="padding:7px 14px;font-size:12.5px;" onclick="setApplicationStatus('${a.id}','approved')">Approve</button>
+          <button class="btn btn-ghost" style="padding:7px 14px;font-size:12.5px;border-color:rgba(11,22,32,0.2);color:var(--ink);" onclick="setApplicationStatus('${a.id}','rejected')">Reject</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+async function setApplicationStatus(id, status){
+  const apps = await loadApplications();
+  const app = apps.find(a => a.id === id);
+  if(!app) return;
+  app.status = status;
+  await saveApplications(apps);
+  await renderAdminMembership();
+
+  // If this browser is the applicant being reviewed, update its own view live
+  if(member && member.id === id){
+    member = app;
+    applyMemberUI();
+  }
+  showToast(app.name + ' marked ' + status);
+}
+
+/* ---------------- ADMIN: HOUSE STAYS ---------------- */
+function renderAdminStays(){
+  const el = document.getElementById('adminList');
+  if(listings.length === 0){
+    el.innerHTML = '<p style="color:#5B6B65;font-size:14px;">No listings yet.</p>';
+    return;
+  }
+  el.innerHTML = listings.map(l => `
+    <div class="admin-row">
+      <div style="min-width:0;">
+        <strong style="font-size:14px;">${escapeHtml(l.title)}</strong>
+        <p style="font-size:12.5px;color:#5B6B65;margin:2px 0 0;">${escapeHtml(l.location)} · $${l.price}/night</p>
+      </div>
+      <div class="admin-row-actions">
+        <button class="btn btn-ghost" style="border-color:rgba(11,22,32,0.2);color:var(--ink);" onclick="editListing('${l.id}')">Edit</button>
+        <button class="btn btn-ghost" style="border-color:rgba(225,99,63,0.4);color:var(--coral);" onclick="deleteListing('${l.id}')">Delete</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function editListing(id){
+  const l = listings.find(x=>x.id===id);
+  if(!l) return;
+  editingListingId = id;
+  document.getElementById('lTitle').value = l.title;
+  document.getElementById('lLocation').value = l.location;
+  document.getElementById('lRegion').value = l.region;
+  document.getElementById('lSite').value = l.site;
+  document.getElementById('lViz').value = l.viz;
+  document.getElementById('lDepth').value = l.depth;
+  document.getElementById('lPrice').value = l.price;
+  document.getElementById('lHostCert').value = l.hostCert;
+  document.getElementById('lDesc').value = l.desc;
+  const cleaning = (l.fees || []).find(f=>f.label==='Cleaning fee');
+  const tank = (l.fees || []).find(f=>f.label==='Tank-fill fee');
+  document.getElementById('lCleaningFee').value = cleaning ? cleaning.amount : '';
+  document.getElementById('lTankFee').value = tank ? tank.amount : '';
+  document.querySelectorAll('.amenity-check').forEach(c => c.checked = (l.amenities || []).includes(c.value));
+  currentBlockedDates = (l.blockedDates || []).slice();
+  renderBlockedDatesList();
+  if(l.photo){
+    document.getElementById('lPhotoPreview').src = l.photo;
+    document.getElementById('lPhotoPreviewWrap').style.display = 'block';
+  } else {
+    document.getElementById('lPhotoPreviewWrap').style.display = 'none';
+  }
+  document.querySelector('#listOverlay h3').textContent = 'Edit listing';
+  closeModal('adminOverlay');
+  openModal('listOverlay');
+}
+
+async function deleteListing(id){
+  listings = listings.filter(x => x.id !== id);
+  await safeSet('si_listings_v1', JSON.stringify(listings), true);
+  renderGrid();
+  renderAdminStays();
+  showToast('Listing deleted');
+}
+
+/* ---------------- ADMIN: DIVE SITES ---------------- */
+function renderAdminSites(){
+  const el = document.getElementById('adminList');
+  if(sites.length === 0){
+    el.innerHTML = '<p style="color:#5B6B65;font-size:14px;">No dive sites yet.</p>';
+    return;
+  }
+  const statusColor = { pending:'#D9A66C', approved:'#2FAE8F', rejected:'#E1633F' };
+  const sorted = sites.slice().sort((a,b)=> (a.status==='pending'?0:1) - (b.status==='pending'?0:1));
+  el.innerHTML = sorted.map(s => `
+    <div class="admin-row">
+      <div style="min-width:0;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <strong style="font-size:14px;">${escapeHtml(s.name)}</strong>
+          <span class="status-badge" style="color:${statusColor[s.status]};border:1px solid ${statusColor[s.status]};">${s.status}</span>
+        </div>
+        <p style="font-size:12.5px;color:#5B6B65;margin:2px 0 0;">${escapeHtml(s.location)} · ${escapeHtml(s.area)}${s.suggestedBy ? ' · suggested by ' + escapeHtml(s.suggestedBy) : ''}</p>
+      </div>
+      <div class="admin-row-actions">
+        ${s.status === 'pending' ? `
+          <button class="btn btn-reef" onclick="setSiteStatus('${s.id}','approved')">Approve</button>
+          <button class="btn btn-ghost" style="border-color:rgba(11,22,32,0.2);color:var(--ink);" onclick="setSiteStatus('${s.id}','rejected')">Reject</button>
+        ` : ''}
+        <button class="btn btn-ghost" style="border-color:rgba(11,22,32,0.2);color:var(--ink);" onclick="editSite('${s.id}')">Edit</button>
+        <button class="btn btn-ghost" style="border-color:rgba(225,99,63,0.4);color:var(--coral);" onclick="deleteSite('${s.id}')">Delete</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+async function setSiteStatus(id, status){
+  const s = sites.find(x=>x.id===id);
+  if(!s) return;
+  s.status = status;
+  await safeSet('si_sites_v1', JSON.stringify(sites), true);
+  renderSiteGrid();
+  renderAdminSites();
+  showToast(s.name + ' marked ' + status);
+}
+
+function editSite(id){
+  const s = sites.find(x=>x.id===id);
+  if(!s) return;
+  editingSiteId = id;
+  document.getElementById('siteName').value = s.name;
+  document.getElementById('siteLocation').value = s.location;
+  document.getElementById('siteArea').value = s.area;
+  document.getElementById('siteLevel').value = s.level;
+  document.getElementById('siteDesc').value = s.desc;
+  document.querySelector('#newSiteOverlay h3').textContent = 'Edit dive site';
+  closeModal('adminOverlay');
+  openModal('newSiteOverlay');
+}
+
+async function deleteSite(id){
+  sites = sites.filter(x => x.id !== id);
+  await safeSet('si_sites_v1', JSON.stringify(sites), true);
+  renderSiteGrid();
+  renderAdminSites();
+  showToast('Dive site deleted');
+}
+
+/* ---------------- ADMIN: DIVE TRIPS ---------------- */
+function renderAdminTrips(){
+  const el = document.getElementById('adminList');
+  if(trips.length === 0){
+    el.innerHTML = '<p style="color:#5B6B65;font-size:14px;">No trips proposed yet.</p>';
+    return;
+  }
+  const statusColor = { pending:'#D9A66C', approved:'#2FAE8F', rejected:'#E1633F' };
+  const sorted = trips.slice().sort((a,b)=> (a.status==='pending'?0:1) - (b.status==='pending'?0:1));
+  el.innerHTML = sorted.map(t => `
+    <div class="admin-row">
+      <div style="min-width:0;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <strong style="font-size:14px;">${escapeHtml(t.title)}</strong>
+          <span class="status-badge" style="color:${statusColor[t.status]};border:1px solid ${statusColor[t.status]};">${t.status}</span>
+        </div>
+        <p style="font-size:12.5px;color:#5B6B65;margin:2px 0 0;">${escapeHtml(t.destination)} · ${t.startDate} → ${t.endDate} · proposed by ${escapeHtml(t.organizer)}</p>
+      </div>
+      <div class="admin-row-actions">
+        ${t.status === 'pending' ? `
+          <button class="btn btn-reef" onclick="setTripStatus('${t.id}','approved')">Approve</button>
+          <button class="btn btn-ghost" style="border-color:rgba(11,22,32,0.2);color:var(--ink);" onclick="setTripStatus('${t.id}','rejected')">Reject</button>
+        ` : ''}
+        <button class="btn btn-ghost" style="border-color:rgba(11,22,32,0.2);color:var(--ink);" onclick="editTrip('${t.id}')">Edit</button>
+        <button class="btn btn-ghost" style="border-color:rgba(225,99,63,0.4);color:var(--coral);" onclick="deleteTrip('${t.id}')">Delete</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+async function setTripStatus(id, status){
+  const t = trips.find(x=>x.id===id);
+  if(!t) return;
+  t.status = status;
+  await safeSet('si_trips_v1', JSON.stringify(trips), true);
+  renderTripGrid();
+  renderAdminTrips();
+  showToast(t.title + ' marked ' + status);
+}
+
+function editTrip(id){
+  const t = trips.find(x=>x.id===id);
+  if(!t) return;
+  editingTripId = id;
+  document.getElementById('tripTitle').value = t.title;
+  document.getElementById('tripDestination').value = t.destination;
+  document.getElementById('tripArea').value = t.area;
+  document.getElementById('tripStart').value = t.startDate;
+  document.getElementById('tripEnd').value = t.endDate;
+  document.getElementById('tripSpots').value = t.spots || '';
+  document.getElementById('tripDesc').value = t.desc;
+  document.querySelector('#newTripOverlay h3').textContent = 'Edit trip';
+  closeModal('adminOverlay');
+  openModal('newTripOverlay');
+}
+
+async function deleteTrip(id){
+  trips = trips.filter(x => x.id !== id);
+  await safeSet('si_trips_v1', JSON.stringify(trips), true);
+  renderTripGrid();
+  renderAdminTrips();
+  showToast('Trip deleted');
+}
+
+/* ---------------- ADMIN: DIVE SHOPS ---------------- */
+function renderAdminShops(){
+  const el = document.getElementById('adminList');
+  if(shops.length === 0){
+    el.innerHTML = '<p style="color:#5B6B65;font-size:14px;">No dive shops yet.</p>';
+    return;
+  }
+  const statusColor = { pending:'#D9A66C', approved:'#2FAE8F', rejected:'#E1633F' };
+  const sorted = shops.slice().sort((a,b)=> (a.status==='pending'?0:1) - (b.status==='pending'?0:1));
+  el.innerHTML = sorted.map(s => `
+    <div class="admin-row">
+      <div style="min-width:0;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <strong style="font-size:14px;">${escapeHtml(s.name)}</strong>
+          <span class="status-badge" style="color:${statusColor[s.status]};border:1px solid ${statusColor[s.status]};">${s.status}</span>
+        </div>
+        <p style="font-size:12.5px;color:#5B6B65;margin:2px 0 0;">${escapeHtml(s.location)} · ${escapeHtml(s.area)} · added by ${escapeHtml(s.addedBy)}</p>
+      </div>
+      <div class="admin-row-actions">
+        ${s.status === 'pending' ? `
+          <button class="btn btn-reef" onclick="setShopStatus('${s.id}','approved')">Approve</button>
+          <button class="btn btn-ghost" style="border-color:rgba(11,22,32,0.2);color:var(--ink);" onclick="setShopStatus('${s.id}','rejected')">Reject</button>
+        ` : ''}
+        <button class="btn btn-ghost" style="border-color:rgba(11,22,32,0.2);color:var(--ink);" onclick="editShop('${s.id}')">Edit</button>
+        <button class="btn btn-ghost" style="border-color:rgba(225,99,63,0.4);color:var(--coral);" onclick="deleteShop('${s.id}')">Delete</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+async function setShopStatus(id, status){
+  const s = shops.find(x=>x.id===id);
+  if(!s) return;
+  s.status = status;
+  await safeSet('si_shops_v1', JSON.stringify(shops), true);
+  renderShopGrid();
+  renderAdminShops();
+  showToast(s.name + ' marked ' + status);
+}
+
+function editShop(id){
+  const s = shops.find(x=>x.id===id);
+  if(!s) return;
+  editingShopId = id;
+  document.getElementById('shopName').value = s.name;
+  document.getElementById('shopLocation').value = s.location;
+  document.getElementById('shopArea').value = s.area;
+  document.getElementById('shopNote').value = s.note;
+  document.querySelectorAll('.shop-service-check').forEach(c => c.checked = (s.services || []).includes(c.value));
+  document.querySelector('#newShopOverlay h3').textContent = 'Edit dive shop';
+  closeModal('adminOverlay');
+  openModal('newShopOverlay');
+}
+
+async function deleteShop(id){
+  shops = shops.filter(x => x.id !== id);
+  await safeSet('si_shops_v1', JSON.stringify(shops), true);
+  renderShopGrid();
+  renderAdminShops();
+  showToast('Dive shop deleted');
+}
+
+/* ---------------- ADMIN TAB SWITCHING ---------------- */
+/* ---------------- ADMIN: BOOKINGS ---------------- */
+async function renderAdminBookings(){
+  const el = document.getElementById('adminList');
+  const bookings = await loadCollection('si_bookings_v1', []);
+  if(bookings.length === 0){
+    el.innerHTML = '<p style="color:#5B6B65;font-size:14px;">No booking requests yet.</p>';
+    return;
+  }
+  const statusColor = { pending:'#D9A66C', approved:'#2FAE8F', declined:'#E1633F' };
+  const sorted = bookings.slice().sort((a,b)=> (a.status==='pending'?0:1) - (b.status==='pending'?0:1));
+  el.innerHTML = sorted.map(b => `
+    <div class="admin-row">
+      <div style="min-width:0;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <strong style="font-size:14px;">${escapeHtml(b.listingTitle)}</strong>
+          <span class="status-badge" style="color:${statusColor[b.status]};border:1px solid ${statusColor[b.status]};">${b.status}</span>
+        </div>
+        <p style="font-size:12.5px;color:#5B6B65;margin:2px 0 0;">${escapeHtml(b.guestName)} (${escapeHtml(b.guestEmail)}) · ${b.checkin} → ${b.checkout}${b.message ? ' · "' + escapeHtml(b.message) + '"' : ''}</p>
+      </div>
+      <div class="admin-row-actions">
+        ${b.status === 'pending' ? `
+          <button class="btn btn-reef" onclick="setBookingStatus('${b.id}','approved')">Approve</button>
+          <button class="btn btn-ghost" style="border-color:rgba(11,22,32,0.2);color:var(--ink);" onclick="setBookingStatus('${b.id}','declined')">Decline</button>
+        ` : ''}
+        <button class="btn btn-ghost" style="border-color:rgba(225,99,63,0.4);color:var(--coral);" onclick="deleteBooking('${b.id}')">Delete</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+async function setBookingStatus(id, status){
+  const bookings = await loadCollection('si_bookings_v1', []);
+  const b = bookings.find(x=>x.id===id);
+  if(!b) return;
+  b.status = status;
+  await safeSet('si_bookings_v1', JSON.stringify(bookings), true);
+  renderAdminBookings();
+  showToast(b.guestName + "'s request marked " + status + (status==='approved' ? ' — payment would be collected next' : ''));
+}
+
+async function deleteBooking(id){
+  const bookings = await loadCollection('si_bookings_v1', []);
+  const filtered = bookings.filter(x=>x.id!==id);
+  await safeSet('si_bookings_v1', JSON.stringify(filtered), true);
+  renderAdminBookings();
+  showToast('Booking request removed');
+}
+
+/* ---------------- ADMIN: MESSAGES ---------------- */
+async function renderAdminMessages(){
+  const el = document.getElementById('adminList');
+  const messages = await loadCollection('si_messages_v1', []);
+  if(messages.length === 0){
+    el.innerHTML = '<p style="color:#5B6B65;font-size:14px;">No messages yet.</p>';
+    return;
+  }
+  el.innerHTML = messages.map(m => `
+    <div class="msg-row">
+      <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+        <strong style="font-size:13.5px;">${escapeHtml(m.fromName)}</strong>
+        <span style="font-size:12px;color:#5B6B65;">about ${escapeHtml(m.listingTitle)} · ${timeAgo(m.createdAt)}</span>
+      </div>
+      <p style="font-size:13.5px;color:#354340;margin:6px 0 4px;line-height:1.6;">${escapeHtml(m.body)}</p>
+      <p style="font-size:11.5px;color:#8A9691;margin:0;">Reply to: ${escapeHtml(m.fromEmail)}</p>
+    </div>
+  `).join('');
+}
+
+const ADMIN_RENDERERS = {
+  membership: renderAdminMembership,
+  stays: renderAdminStays,
+  sites: renderAdminSites,
+  trips: renderAdminTrips,
+  shops: renderAdminShops,
+  bookings: renderAdminBookings,
+  messages: renderAdminMessages,
+};
+
+function switchAdminTab(tab){
+  document.querySelectorAll('.admin-tab-btn').forEach(b=>{
+    b.classList.toggle('active', b.dataset.adminTab === tab);
+  });
+  ADMIN_RENDERERS[tab]();
+}
+
+document.querySelectorAll('.admin-tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=> switchAdminTab(btn.dataset.adminTab));
+});
+
+/* ---------------- TOAST ---------------- */
+let toastTimer;
+function showToast(msg){
+  const t = document.getElementById('toast');
+  document.getElementById('toastText').textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=> t.classList.remove('show'), 3200);
+}
+</script>
+</body>
+</html>
