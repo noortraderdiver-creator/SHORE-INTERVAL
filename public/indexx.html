@@ -1348,7 +1348,7 @@ async function loadApplications(){
   try{ return JSON.parse(raw); }catch(e){ return []; }
 }
 async function saveApplications(apps){
-  await safeSet('si_applications_v1', JSON.stringify(apps), true);
+  return await safeSet('si_applications_v1', JSON.stringify(apps), true);
 }
 
 // Lets a member check their own application status without needing the
@@ -1584,10 +1584,10 @@ async function postReply(threadId){
 
   const t = threads.find(x=>x.id===threadId);
   t.posts.push({author: member.name, authorCert: member.cert, body, createdAt: new Date().toISOString()});
-  await safeSet('si_threads_v1', JSON.stringify(threads), true);
+  const ok = await safeSet('si_threads_v1', JSON.stringify(threads), true);
   openThread(threadId);
   renderThreadList();
-  showToast('Reply posted');
+  showToast(ok ? 'Reply posted' : 'Could not post — check your connection and try again');
 }
 
 document.getElementById('newThreadForm').addEventListener('submit', async (e)=>{
@@ -1602,11 +1602,11 @@ document.getElementById('newThreadForm').addEventListener('submit', async (e)=>{
     posts:[{author: member.name, authorCert: member.cert, body: bodyText, createdAt: new Date().toISOString()}]
   };
   threads.unshift(thread);
-  await safeSet('si_threads_v1', JSON.stringify(threads), true);
+  const ok = await safeSet('si_threads_v1', JSON.stringify(threads), true);
   renderThreadList();
   closeModal('newThreadOverlay');
   e.target.reset();
-  showToast('Thread posted');
+  showToast(ok ? 'Thread posted' : 'Could not post — check your connection and try again');
 });
 
 /* ---------------- DIVE SITES ---------------- */
@@ -1707,10 +1707,10 @@ async function postExperience(siteId){
 
   const s = sites.find(x=>x.id===siteId);
   s.experiences.unshift({author: member.name, body: bodyText, media, mediaType, createdAt: new Date().toISOString()});
-  await safeSet('si_sites_v1', JSON.stringify(sites), true);
+  const ok = await safeSet('si_sites_v1', JSON.stringify(sites), true);
   openSite(siteId);
   renderSiteGrid();
-  showToast('Experience posted');
+  showToast(ok ? 'Experience posted' : 'Could not post — check your connection and try again');
 }
 
 /* ---------------- DIVE TRIPS ---------------- */
@@ -1775,20 +1775,26 @@ document.getElementById('newTripForm').addEventListener('submit', async (e)=>{
     desc: document.getElementById('tripDesc').value,
   };
 
+  let successMsg;
   if(editingTripId){
     const existing = trips.find(t => t.id === editingTripId);
     Object.assign(existing, fields);
-    showToast('Trip updated');
+    successMsg = 'Trip updated';
     editingTripId = null;
   } else {
     trips.unshift({ id:'trip-'+Date.now(), ...fields, organizer: member.name, status:'pending' });
-    showToast('Trip submitted — pending review before it\'s listed');
+    successMsg = 'Trip submitted — pending review before it\'s listed';
   }
 
-  await safeSet('si_trips_v1', JSON.stringify(trips), true);
+  const ok = await safeSet('si_trips_v1', JSON.stringify(trips), true);
   renderTripGrid();
-  closeModal('newTripOverlay');
-  e.target.reset();
+  if(ok){
+    closeModal('newTripOverlay');
+    e.target.reset();
+    showToast(successMsg);
+  } else {
+    showToast('Could not save — check your connection and try again');
+  }
 });
 
 /* ---------------- DIVE SHOPS ---------------- */
@@ -1833,20 +1839,26 @@ document.getElementById('newShopForm').addEventListener('submit', async (e)=>{
     note: document.getElementById('shopNote').value,
   };
 
+  let successMsg;
   if(editingShopId){
     const existing = shops.find(s => s.id === editingShopId);
     Object.assign(existing, fields);
-    showToast('Shop updated');
+    successMsg = 'Shop updated';
     editingShopId = null;
   } else {
     shops.unshift({ id:'shop-'+Date.now(), ...fields, addedBy: member.name, status:'pending' });
-    showToast('Shop submitted — pending review before it\'s listed');
+    successMsg = 'Shop submitted — pending review before it\'s listed';
   }
 
-  await safeSet('si_shops_v1', JSON.stringify(shops), true);
+  const ok = await safeSet('si_shops_v1', JSON.stringify(shops), true);
   renderShopGrid();
-  closeModal('newShopOverlay');
-  e.target.reset();
+  if(ok){
+    closeModal('newShopOverlay');
+    e.target.reset();
+    showToast(successMsg);
+  } else {
+    showToast('Could not save — check your connection and try again');
+  }
 });
 
 let editingSiteId = null;
@@ -1862,20 +1874,26 @@ document.getElementById('newSiteForm').addEventListener('submit', async (e)=>{
     desc: document.getElementById('siteDesc').value,
   };
 
+  let successMsg;
   if(editingSiteId){
     const existing = sites.find(s => s.id === editingSiteId);
     Object.assign(existing, fields);
-    showToast('Dive site updated');
+    successMsg = 'Dive site updated';
     editingSiteId = null;
   } else {
     sites.unshift({ id:'ds-'+Date.now(), ...fields, experiences:[], suggestedBy: member.name, status:'pending' });
-    showToast('Dive site submitted — pending review before it\'s listed');
+    successMsg = 'Dive site submitted — pending review before it\'s listed';
   }
 
-  await safeSet('si_sites_v1', JSON.stringify(sites), true);
+  const ok = await safeSet('si_sites_v1', JSON.stringify(sites), true);
   renderSiteGrid();
-  closeModal('newSiteOverlay');
-  e.target.reset();
+  if(ok){
+    closeModal('newSiteOverlay');
+    e.target.reset();
+    showToast(successMsg);
+  } else {
+    showToast('Could not save — check your connection and try again');
+  }
 });
 
 
@@ -2390,20 +2408,26 @@ document.getElementById('listForm').addEventListener('submit', async (e)=>{
     blockedDates: currentBlockedDates.slice(),
   };
 
+  let successMsg;
   if(editingListingId){
     const existing = listings.find(l => l.id === editingListingId);
     Object.assign(existing, fields);
-    showToast('Listing updated');
+    successMsg = 'Listing updated';
     editingListingId = null;
   } else {
     listings.unshift({ id: 'si-' + Date.now(), ...fields, hostName: member.name, hostEmail: member.email });
-    showToast('Listing published — visible to all members now');
+    successMsg = 'Listing published — visible to all members now';
   }
 
-  await safeSet('si_listings_v1', JSON.stringify(listings), true);
+  const ok = await safeSet('si_listings_v1', JSON.stringify(listings), true);
   renderGrid();
-  closeModal('listOverlay');
-  e.target.reset();
+  if(ok){
+    closeModal('listOverlay');
+    e.target.reset();
+    showToast(successMsg);
+  } else {
+    showToast('Could not save — check your connection and try again');
+  }
   document.getElementById('lPhotoPreviewWrap').style.display = 'none';
   document.getElementById('browse').scrollIntoView({behavior:'smooth'});
 });
@@ -2447,8 +2471,15 @@ async function setApplicationStatus(id, status){
   const apps = await loadApplications();
   const app = apps.find(a => a.id === id);
   if(!app) return;
+  const prevStatus = app.status;
   app.status = status;
-  await saveApplications(apps);
+  const ok = await saveApplications(apps);
+  if(!ok){
+    app.status = prevStatus;
+    await renderAdminMembership();
+    showToast('Could not save — please sign back in as admin and try again');
+    return;
+  }
   await renderAdminMembership();
 
   // If this browser is the applicant being reviewed, update its own view live
@@ -2512,8 +2543,15 @@ function editListing(id){
 }
 
 async function deleteListing(id){
+  const prev = listings;
   listings = listings.filter(x => x.id !== id);
-  await safeSet('si_listings_v1', JSON.stringify(listings), true);
+  const ok = await safeSet('si_listings_v1', JSON.stringify(listings), true);
+  if(!ok){
+    listings = prev;
+    renderGrid(); renderAdminStays();
+    showToast('Could not delete — please sign back in as admin and try again');
+    return;
+  }
   renderGrid();
   renderAdminStays();
   showToast('Listing deleted');
@@ -2552,8 +2590,15 @@ function renderAdminSites(){
 async function setSiteStatus(id, status){
   const s = sites.find(x=>x.id===id);
   if(!s) return;
+  const prevStatus = s.status;
   s.status = status;
-  await safeSet('si_sites_v1', JSON.stringify(sites), true);
+  const ok = await safeSet('si_sites_v1', JSON.stringify(sites), true);
+  if(!ok){
+    s.status = prevStatus;
+    renderSiteGrid(); renderAdminSites();
+    showToast('Could not save — please sign back in as admin and try again');
+    return;
+  }
   renderSiteGrid();
   renderAdminSites();
   showToast(s.name + ' marked ' + status);
@@ -2574,8 +2619,15 @@ function editSite(id){
 }
 
 async function deleteSite(id){
+  const prev = sites;
   sites = sites.filter(x => x.id !== id);
-  await safeSet('si_sites_v1', JSON.stringify(sites), true);
+  const ok = await safeSet('si_sites_v1', JSON.stringify(sites), true);
+  if(!ok){
+    sites = prev;
+    renderSiteGrid(); renderAdminSites();
+    showToast('Could not delete — please sign back in as admin and try again');
+    return;
+  }
   renderSiteGrid();
   renderAdminSites();
   showToast('Dive site deleted');
@@ -2614,8 +2666,15 @@ function renderAdminTrips(){
 async function setTripStatus(id, status){
   const t = trips.find(x=>x.id===id);
   if(!t) return;
+  const prevStatus = t.status;
   t.status = status;
-  await safeSet('si_trips_v1', JSON.stringify(trips), true);
+  const ok = await safeSet('si_trips_v1', JSON.stringify(trips), true);
+  if(!ok){
+    t.status = prevStatus;
+    renderTripGrid(); renderAdminTrips();
+    showToast('Could not save — please sign back in as admin and try again');
+    return;
+  }
   renderTripGrid();
   renderAdminTrips();
   showToast(t.title + ' marked ' + status);
@@ -2638,8 +2697,15 @@ function editTrip(id){
 }
 
 async function deleteTrip(id){
+  const prev = trips;
   trips = trips.filter(x => x.id !== id);
-  await safeSet('si_trips_v1', JSON.stringify(trips), true);
+  const ok = await safeSet('si_trips_v1', JSON.stringify(trips), true);
+  if(!ok){
+    trips = prev;
+    renderTripGrid(); renderAdminTrips();
+    showToast('Could not delete — please sign back in as admin and try again');
+    return;
+  }
   renderTripGrid();
   renderAdminTrips();
   showToast('Trip deleted');
@@ -2678,8 +2744,15 @@ function renderAdminShops(){
 async function setShopStatus(id, status){
   const s = shops.find(x=>x.id===id);
   if(!s) return;
+  const prevStatus = s.status;
   s.status = status;
-  await safeSet('si_shops_v1', JSON.stringify(shops), true);
+  const ok = await safeSet('si_shops_v1', JSON.stringify(shops), true);
+  if(!ok){
+    s.status = prevStatus;
+    renderShopGrid(); renderAdminShops();
+    showToast('Could not save — please sign back in as admin and try again');
+    return;
+  }
   renderShopGrid();
   renderAdminShops();
   showToast(s.name + ' marked ' + status);
@@ -2700,8 +2773,15 @@ function editShop(id){
 }
 
 async function deleteShop(id){
+  const prev = shops;
   shops = shops.filter(x => x.id !== id);
-  await safeSet('si_shops_v1', JSON.stringify(shops), true);
+  const ok = await safeSet('si_shops_v1', JSON.stringify(shops), true);
+  if(!ok){
+    shops = prev;
+    renderShopGrid(); renderAdminShops();
+    showToast('Could not delete — please sign back in as admin and try again');
+    return;
+  }
   renderShopGrid();
   renderAdminShops();
   showToast('Dive shop deleted');
@@ -2743,7 +2823,12 @@ async function setBookingStatus(id, status){
   const b = bookings.find(x=>x.id===id);
   if(!b) return;
   b.status = status;
-  await safeSet('si_bookings_v1', JSON.stringify(bookings), true);
+  const ok = await safeSet('si_bookings_v1', JSON.stringify(bookings), true);
+  if(!ok){
+    renderAdminBookings();
+    showToast('Could not save — please sign back in as admin and try again');
+    return;
+  }
   renderAdminBookings();
   showToast(b.guestName + "'s request marked " + status + (status==='approved' ? ' — payment would be collected next' : ''));
 }
@@ -2751,7 +2836,12 @@ async function setBookingStatus(id, status){
 async function deleteBooking(id){
   const bookings = await loadCollection('si_bookings_v1', []);
   const filtered = bookings.filter(x=>x.id!==id);
-  await safeSet('si_bookings_v1', JSON.stringify(filtered), true);
+  const ok = await safeSet('si_bookings_v1', JSON.stringify(filtered), true);
+  if(!ok){
+    renderAdminBookings();
+    showToast('Could not delete — please sign back in as admin and try again');
+    return;
+  }
   renderAdminBookings();
   showToast('Booking request removed');
 }
